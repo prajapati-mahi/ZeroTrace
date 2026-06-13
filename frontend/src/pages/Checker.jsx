@@ -5,9 +5,12 @@ function Checker() {
   const [text1, setText1] = useState("");
   const [text2, setText2] = useState("");
   const [score, setScore] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const handleCheck = async () => {
     try {
+      setLoading(true);
+
       const response = await axios.post(
         "http://localhost:5000/api/plagiarism/check",
         {
@@ -18,7 +21,10 @@ function Checker() {
 
       setScore(response.data.score);
     } catch (error) {
-      console.log(error);
+      console.error(error);
+      alert("Error connecting to backend");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -44,9 +50,10 @@ function Checker() {
 
       <button
         onClick={handleCheck}
+        disabled={loading}
         className="bg-black text-white px-6 py-3 rounded"
       >
-        Check Plagiarism
+        {loading ? "Checking..." : "Check Plagiarism"}
       </button>
 
       {score !== null && (
