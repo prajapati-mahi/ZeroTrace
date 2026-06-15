@@ -2,27 +2,35 @@ import { useState } from "react";
 import axios from "axios";
 
 function Checker() {
-  const [text1, setText1] = useState("");
-  const [text2, setText2] = useState("");
+  const [pdf1, setPdf1] = useState(null);
+  const [pdf2, setPdf2] = useState(null);
   const [score, setScore] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const handleCheck = async () => {
+  const handleCompare = async () => {
+    if (!pdf1 || !pdf2) {
+      alert("Please upload both PDFs");
+      return;
+    }
+
     try {
       setLoading(true);
 
-      const response = await axios.post(
-        "http://localhost:5000/api/plagiarism/check",
-        {
-          text1,
-          text2,
-        }
-      );
+      const formData = new FormData();
 
-      setScore(response.data.score);
+      formData.append("pdf1", pdf1);
+      formData.append("pdf2", pdf2);
+
+      const response = await axios.post(
+        "http://localhost:5000/api/pdf/compare",
+        formData
+      );
+      console.log(JSON.stringify(response.data, null, 2));
+      setScore(response.data.similarityScore);
     } catch (error) {
-      console.error(error);
-      alert("Error connecting to backend");
+      console.log(error);
+
+      alert("Error comparing PDFs");
     } finally {
       setLoading(false);
     }
@@ -30,37 +38,60 @@ function Checker() {
 
   return (
     <div className="p-10">
-      <h1 className="text-4xl font-bold mb-6">
-        ZeroTrace Checker
+
+      <h1 className="text-4xl font-bold mb-8">
+        ZeroTrace PDF Checker
       </h1>
 
-      <textarea
-        placeholder="Original Text"
-        value={text1}
-        onChange={(e) => setText1(e.target.value)}
-        className="border w-full h-40 p-4 mb-4"
-      />
+      <div className="mb-4">
 
-      <textarea
-        placeholder="Suspicious Text"
-        value={text2}
-        onChange={(e) => setText2(e.target.value)}
-        className="border w-full h-40 p-4 mb-4"
-      />
+        <label>
+          Upload First PDF
+        </label>
+
+        <input
+          type="file"
+          accept=".pdf"
+          onChange={(e) =>
+            setPdf1(e.target.files[0])
+          }
+          className="block mt-2"
+        />
+
+      </div>
+
+      <div className="mb-6">
+
+        <label>
+          Upload Second PDF
+        </label>
+
+        <input
+          type="file"
+          accept=".pdf"
+          onChange={(e) =>
+            setPdf2(e.target.files[0])
+          }
+          className="block mt-2"
+        />
+
+      </div>
 
       <button
-        onClick={handleCheck}
-        disabled={loading}
+        onClick={handleCompare}
         className="bg-black text-white px-6 py-3 rounded"
       >
-        {loading ? "Checking..." : "Check Plagiarism"}
+        {loading
+          ? "Comparing..."
+          : "Compare PDFs"}
       </button>
 
       {score !== null && (
-        <h2 className="text-2xl mt-6">
+        <h2 className="text-2xl mt-8">
           Similarity Score: {score}%
         </h2>
       )}
+
     </div>
   );
 }
