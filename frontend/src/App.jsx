@@ -141,6 +141,7 @@ import Checker from "./pages/Checker";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Dashboard from "./pages/Dashboard";
+import PDFChecker from "./pages/PDFChecker";
 
 function App() {
   return (
@@ -151,6 +152,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/pdf-checker" element={<PDFChecker />}/>
       </Routes>
     </BrowserRouter>
   );

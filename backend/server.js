@@ -3,6 +3,7 @@ const cors = require("cors");
 
 const plagiarismRoutes = require("./routes/plagiarismRoutes");
 const pdfRoutes = require("./routes/pdfRoutes");
+const reportRoutes = require("./routes/reportRoutes");
 
 const app = express();
 
@@ -20,22 +21,24 @@ app.get("/", (req, res) => {
 });
 
 // Routes
-// app.use("/api/plagiarism", plagiarismRoutes);
-// app.use("/api/pdf", pdfRoutes);
+app.use(
+  "/api/plagiarism",
+  plagiarismRoutes
+);
 
-// console.log("plagiarismRoutes =", plagiarismRoutes);
-// console.log("pdfRoutes =", pdfRoutes);
+app.use(
+  "/api/pdf",
+  pdfRoutes
+);
 
-// //app.use("/api/plagiarism", plagiarismRoutes);
-// app.use("/api/pdf", pdfRoutes);
-
-console.log("plagiarismRoutes =", typeof plagiarismRoutes);
-console.log("pdfRoutes =", typeof pdfRoutes);
-
-app.use("/api/plagiarism", plagiarismRoutes);
-app.use("/api/pdf", pdfRoutes);
+app.use(
+  "/api/report",
+  reportRoutes
+);
 
 // Server Start
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(
+    `Server running on port ${PORT}`
+  );
 });
