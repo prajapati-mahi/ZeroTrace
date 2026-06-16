@@ -32,10 +32,43 @@ const comparePDFs = async (req, res) => {
       pdf2Text.text
     );
 
-    res.status(200).json({
-      success: true,
-      similarityScore: score,
-    });
+    const matches = [];
+
+const sentences1 =
+  pdf1Text.text.split(".");
+
+const sentences2 =
+  pdf2Text.text.split(".");
+
+sentences1.forEach((sentence1) => {
+
+  const clean1 =
+    sentence1.trim();
+
+  if (clean1.length < 20)
+    return;
+
+  sentences2.forEach((sentence2) => {
+
+    const clean2 =
+      sentence2.trim();
+
+    if (
+      clean1.toLowerCase() ===
+      clean2.toLowerCase()
+    ) {
+      matches.push(clean1);
+    }
+
+  });
+
+});
+
+res.status(200).json({
+  success: true,
+  similarityScore: score,
+  matches,
+});
 
   } catch (error) {
 

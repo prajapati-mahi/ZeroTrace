@@ -16,6 +16,7 @@ function PDFChecker() {
   const [loading, setLoading] = useState(false);
 
   const [scanTime, setScanTime] = useState("");
+  const [matches, setMatches] = useState([]);
 
   const handleCompare = async () => {
     if (!pdf1 || !pdf2) {
@@ -37,6 +38,7 @@ function PDFChecker() {
       );
 
       setScore(response.data.similarityScore);
+      setMatches(response.data.matches || []);
 
       setScanTime(
         new Date().toLocaleString()
@@ -323,6 +325,47 @@ function PDFChecker() {
               </p>
 
             </div>
+
+            <div className="bg-white rounded-3xl shadow-lg p-8 mt-8">
+
+  <h2 className="text-2xl font-bold mb-5">
+    Matching Content
+  </h2>
+
+  {matches.length === 0 ? (
+
+    <p>
+      No exact matching sentences found.
+    </p>
+
+  ) : (
+
+    <ul className="space-y-4">
+
+      {matches.map(
+        (match, index) => (
+
+          <li
+            key={index}
+            className="
+            bg-red-50
+            border
+            border-red-200
+            p-4
+            rounded-xl
+            "
+          >
+            {match}
+          </li>
+
+        )
+      )}
+
+    </ul>
+
+  )}
+
+</div>
 
             <div className="mt-8 text-center">
                 <button
