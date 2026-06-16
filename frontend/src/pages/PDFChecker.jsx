@@ -50,6 +50,47 @@ function PDFChecker() {
     }
   };
 
+  const downloadReport = async () => {
+  try {
+
+    const risk = getRiskLevel();
+
+    const response = await axios.post(
+      "http://localhost:5000/api/report/generate",
+      {
+        score,
+        risk: risk.label,
+      },
+      {
+        responseType: "blob",
+      }
+    );
+
+    const url = window.URL.createObjectURL(
+      new Blob([response.data])
+    );
+
+    const link = document.createElement("a");
+
+    link.href = url;
+
+    link.setAttribute(
+      "download",
+      "ZeroTrace_Report.pdf"
+    );
+
+    document.body.appendChild(link);
+
+    link.click();
+
+    link.remove();
+
+  } catch (error) {
+    console.log(error);
+    alert("Failed to download report");
+  }
+};
+
   const getRiskLevel = () => {
     if (score < 20) {
       return {
@@ -281,6 +322,15 @@ function PDFChecker() {
 
               </p>
 
+            </div>
+
+            <div className="mt-8 text-center">
+                <button
+                    onClick={downloadReport}
+                    className="bg-blue-600 text-white px-8 py-3 rounded-xl hover:bg-blue-700"
+                >
+                Download PDF Report
+                </button>
             </div>
 
           </>
