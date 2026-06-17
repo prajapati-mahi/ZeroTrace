@@ -1,13 +1,14 @@
 const fs = require("fs");
 const pdfParse = require("pdf-parse");
 
+const Report = require("../models/Report");
+
 const calculateSimilarity = require(
   "../utils/similarity"
 );
 
 const comparePDFs = async (req, res) => {
   try {
-
     const file1 = req.files.pdf1[0];
     const file2 = req.files.pdf2[0];
 
@@ -27,56 +28,71 @@ const comparePDFs = async (req, res) => {
       pdf2Buffer
     );
 
+    // Similarity Score
     const score = calculateSimilarity(
       pdf1Text.text,
       pdf2Text.text
     );
 
+    // Matching Sentences
     const matches = [];
 
-const sentences1 =
-  pdf1Text.text.split(".");
+    const sentences1 =
+      pdf1Text.text.split(".");
 
-const sentences2 =
-  pdf2Text.text.split(".");
+    const sentences2 =
+      pdf2Text.text.split(".");
 
-sentences1.forEach((sentence1) => {
+    sentences1.forEach((sentence1) => {
+      const clean1 =
+        sentence1.trim();
 
-  const clean1 =
-    sentence1.trim();
+      if (clean1.length < 20)
+        return;
 
-  if (clean1.length < 20)
-    return;
+      sentences2.forEach((sentence2) => {
+        const clean2 =
+          sentence2.trim();
 
-  sentences2.forEach((sentence2) => {
+        if (
+          clean1.toLowerCase() ===
+          clean2.toLowerCase()
+        ) {
+          matches.push(clean1);
+        }
+      });
+    });
 
-    const clean2 =
-      sentence2.trim();
+    // Risk Calculation
+    let risk = "LOW RISK";
 
-    if (
-      clean1.toLowerCase() ===
-      clean2.toLowerCase()
-    ) {
-      matches.push(clean1);
+    if (score >= 50) {
+      risk = "HIGH RISK";
+    } else if (score >= 20) {
+      risk = "MEDIUM RISK";
     }
 
-  });
+    //Save Report to MongoDB
+    await Report.create({
+      score,
+      risk,
+    });
 
-});
+    //console.log(Report);
 
-res.status(200).json({
-  success: true,
-  similarityScore: score,
-  matches,
-});
+    // Response
+    res.status(200).json({
+      success: true,
+      similarityScore: score,
+      risk,
+      matches,
+    });
 
   } catch (error) {
-
     res.status(500).json({
       success: false,
       message: error.message,
     });
-
   }
 };
 
