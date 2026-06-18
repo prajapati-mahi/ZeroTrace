@@ -9,7 +9,6 @@ const getReports = async (req, res) => {
       success: true,
       reports,
     });
-
   } catch (error) {
     res.status(500).json({
       success: false,
