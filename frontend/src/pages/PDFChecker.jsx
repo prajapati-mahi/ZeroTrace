@@ -8,6 +8,7 @@ import {
 
 import "react-circular-progressbar/dist/styles.css";
 import ReportHistory from "../components/ReportHistory";
+import MatchedContent from "../components/MatchedContent";
 
 function PDFChecker() {
   const [pdf1, setPdf1] = useState(null);
@@ -17,6 +18,7 @@ function PDFChecker() {
   const [loading, setLoading] = useState(false);
 
   const [scanTime, setScanTime] = useState("");
+
   const [matches, setMatches] = useState([]);
 
   const handleCompare = async () => {
@@ -39,6 +41,7 @@ function PDFChecker() {
       );
 
       setScore(response.data.similarityScore);
+      setMatches(response.data.matches || []);
       setMatches(response.data.matches || []);
 
       setScanTime(
@@ -331,6 +334,8 @@ function PDFChecker() {
 
   <h2 className="text-2xl font-bold mb-5">
     Matching Content
+
+    <MatchedContent matches={matches}/>
   </h2>
 
   {matches.length === 0 ? (
