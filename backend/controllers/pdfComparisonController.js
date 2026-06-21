@@ -76,6 +76,7 @@ const comparePDFs = async (req, res) => {
     await Report.create({
       score,
       risk,
+      matches,
     });
 
     //console.log(Report);

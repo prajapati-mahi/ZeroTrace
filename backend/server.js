@@ -8,9 +8,10 @@ const plagiarismRoutes = require("./routes/plagiarismRoutes");
 const pdfRoutes = require("./routes/pdfRoutes");
 const reportRoutes = require("./routes/reportRoutes");
 const historyRoutes = require("./routes/historyRoutes");
+const dashboardRoutes = require("./routes/dashboardRoutes");
+const textPlagiarismRoutes = require("./routes/textPlagiarismRoutes");
 
 dotenv.config();
-console.log(process.env.MONGO_URI);
 
 connectDB();
 
@@ -48,6 +49,17 @@ app.use(
 app.use(
   "/api/history",
   historyRoutes
+);
+
+console.log("dashboardRoutes =", dashboardRoutes);
+app.use(
+  "/api/dashboard",
+  dashboardRoutes
+);
+
+app.use(
+  "/api/text",
+  textPlagiarismRoutes
 );
 
 // Server Start

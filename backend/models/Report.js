@@ -11,6 +11,10 @@ const reportSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    matches: {
+      type: [String],
+      default: [],
+    },
   },
   {
     timestamps: true,
