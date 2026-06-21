@@ -15,6 +15,7 @@ const checkTextPlagiarism = async (
   res
 ) => {
   try {
+
     const { text } = req.body;
 
     if (!text) {
@@ -37,6 +38,11 @@ const checkTextPlagiarism = async (
 
     const matchedSources = [];
 
+    const matchedSentences = [];
+
+    const inputSentences =
+      text.split(/[.!?]/);
+
     for (const result of searchResults) {
 
       const websiteText =
@@ -52,13 +58,13 @@ const checkTextPlagiarism = async (
 
       let bestMatch = 0;
 
-      for (const sentence of websiteSentences) {
+      for (const websiteSentence of websiteSentences) {
 
-        const cleanSentence =
-          sentence.trim();
+        const cleanWebsiteSentence =
+          websiteSentence.trim();
 
         if (
-          cleanSentence.length < 20
+          cleanWebsiteSentence.length < 20
         ) {
           continue;
         }
@@ -66,7 +72,7 @@ const checkTextPlagiarism = async (
         const currentScore =
           calculateSimilarity(
             text,
-            cleanSentence
+            cleanWebsiteSentence
           );
 
         if (
@@ -76,10 +82,10 @@ const checkTextPlagiarism = async (
           bestMatch =
             currentScore;
         }
+
       }
 
-      const score =
-        bestMatch;
+      const score = bestMatch;
 
       if (
         score > highestScore
@@ -89,6 +95,7 @@ const checkTextPlagiarism = async (
       }
 
       if (score >= 25) {
+
         matchedSources.push({
           title:
             result.title,
@@ -96,14 +103,69 @@ const checkTextPlagiarism = async (
             result.link,
           score,
         });
+
       }
+
+      // Sentence Level Matching
+
+      for (const inputSentence of inputSentences) {
+
+        const cleanInputSentence =
+          inputSentence.trim();
+
+        if (
+          cleanInputSentence.length < 20
+        ) {
+          continue;
+        }
+
+        for (const websiteSentence of websiteSentences) {
+
+          const cleanWebsiteSentence =
+            websiteSentence.trim();
+
+          if (
+            cleanWebsiteSentence.length < 20
+          ) {
+            continue;
+          }
+
+          const sentenceScore =
+            calculateSimilarity(
+              cleanInputSentence,
+              cleanWebsiteSentence
+            );
+
+          if (
+            sentenceScore >= 30
+          ) {
+
+            matchedSentences.push({
+              sentence:
+                cleanInputSentence,
+              source:
+                result.link,
+              score:
+                sentenceScore,
+            });
+
+          }
+
+        }
+
+      }
+
     }
 
     res.status(200).json({
       plagiarismScore:
         highestScore,
+
       sources:
         matchedSources,
+
+      matchedSentences:
+        matchedSentences,
     });
 
   } catch (error) {
