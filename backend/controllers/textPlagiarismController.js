@@ -2,6 +2,8 @@ const searchWeb = require(
   "../services/searchService"
 );
 
+const Report = require("../models/Report");
+
 const scrapeWebsite = require(
   "../services/scraperService"
 );
@@ -167,7 +169,27 @@ const checkTextPlagiarism = async (
 
     }
 
-    res.status(200).json({
+    const report = await Report.create({
+  title:
+    text.length > 40
+      ? text.substring(0, 40) + "..."
+      : text,
+
+  text,
+
+  plagiarismScore:
+    highestScore,
+
+  aiScore:
+    aiResult.aiScore,
+
+  risk:
+    aiResult.aiRisk,
+
+  matches: matchedSources,
+});
+
+res.status(200).json({
   plagiarismScore:
     highestScore,
 
@@ -181,6 +203,9 @@ const checkTextPlagiarism = async (
     matchedSources,
 
   matchedSentences,
+
+  reportId:
+    report._id,
 });
   } catch (error) {
 

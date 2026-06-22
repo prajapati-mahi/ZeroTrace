@@ -2,28 +2,46 @@ const mongoose = require("mongoose");
 
 const reportSchema = new mongoose.Schema(
   {
-    score: {
+    title: {
+      type: String,
+      default: "",
+    },
+
+    text: {
+      type: String,
+      default: "",
+    },
+
+    plagiarismScore: {
       type: Number,
-      required: true,
+      default: 0,
+    },
+
+    aiScore: {
+      type: Number,
+      default: 0,
     },
 
     risk: {
       type: String,
-      required: true,
+      default: "LOW",
     },
-    matches: {
-      type: [String],
-      default: [],
-    },
+
+    matches: [
+      {
+        title: String,
+        link: String,
+        score: Number,
+      },
+    ],
   },
   {
     timestamps: true,
   }
 );
 
-const Report = mongoose.model(
-  "Report",
-  reportSchema
-);
-
-module.exports = Report;
+module.exports =
+  mongoose.model(
+    "Report",
+    reportSchema
+  );
