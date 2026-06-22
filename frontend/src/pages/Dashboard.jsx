@@ -1,7 +1,19 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-function Dashboard() {
+import Navbar from "../components/Navbar";
+import DashboardStats from "../components/DashboardStats";
+import StatsCard from "../components/StatsCard";
+import RecentReports from "../components/RecentReports";
+
+import {
+  FaFileAlt,
+  FaRobot,
+  FaShieldAlt,
+  FaGlobe,
+} from "react-icons/fa";
+
+const Dashboard = () => {
   const [stats, setStats] = useState(null);
 
   useEffect(() => {
@@ -10,12 +22,11 @@ function Dashboard() {
 
   const fetchStats = async () => {
     try {
-      const response = await axios.get(
+      const res = await axios.get(
         "http://localhost:5000/api/dashboard"
       );
 
-      setStats(response.data);
-
+      setStats(res.data);
     } catch (error) {
       console.log(error);
     }
@@ -23,71 +34,117 @@ function Dashboard() {
 
   if (!stats) {
     return (
-      <div className="p-10">
+      <div className="min-h-screen bg-[#0a0a0f] text-white flex items-center justify-center">
         Loading Dashboard...
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 p-10">
+    <div
+      className="
+      min-h-screen
+      bg-[#0a0a0f]
+      text-[#f0f0f5]
+      px-10
+      py-6
+      relative
+      overflow-hidden
+      "
+    >
+      <div
+        className="
+        absolute
+        top-0
+        left-0
+        w-[500px]
+        h-[500px]
+        bg-[#6c63ff]
+        opacity-20
+        blur-[180px]
+        rounded-full
+        "
+      />
 
-      <h1 className="text-4xl font-bold mb-8">
-        ZeroTrace Analytics
-      </h1>
+      <div
+        className="
+        absolute
+        bottom-0
+        right-0
+        w-[500px]
+        h-[500px]
+        bg-[#00d4ff]
+        opacity-20
+        blur-[180px]
+        rounded-full
+        "
+      />
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="relative z-10">
 
-        <Card
-          title="Total Reports"
-          value={stats.totalReports}
-        />
+        <Navbar />
 
-        <Card
-          title="Average Similarity"
-          value={`${stats.averageSimilarity}%`}
-        />
+        <div className="mt-8 mb-10">
+          <h1
+            className="
+            text-6xl
+            font-black
+            bg-gradient-to-r
+            from-[#6c63ff]
+            to-[#00d4ff]
+            bg-clip-text
+            text-transparent
+            "
+          >
+            ZeroTrace Dashboard
+          </h1>
 
-        <Card
-          title="Highest Similarity"
-          value={`${stats.highestSimilarity}%`}
-        />
+          <p className="text-[#a8a8b8] mt-2">
+            AI-Powered Plagiarism Intelligence
+          </p>
+        </div>
 
-        <Card
-          title="Low Risk"
-          value={stats.lowRisk}
-        />
+        <div className="grid md:grid-cols-4 gap-6">
 
-        <Card
-          title="Medium Risk"
-          value={stats.mediumRisk}
-        />
+          <StatsCard
+            title="Reports"
+            value={stats.totalReports}
+            icon={<FaFileAlt />}
+          />
 
-        <Card
-          title="High Risk"
-          value={stats.highRisk}
-        />
+          <StatsCard
+            title="Average"
+            value={`${stats.averageSimilarity}%`}
+            icon={<FaRobot />}
+          />
+
+          <StatsCard
+            title="Highest"
+            value={`${stats.highestSimilarity}%`}
+            icon={<FaShieldAlt />}
+          />
+
+          <StatsCard
+            title="Sources"
+            value="Web"
+            icon={<FaGlobe />}
+          />
+
+        </div>
+
+        <div className="mt-10">
+          <DashboardStats
+            stats={stats}
+          />
+        </div>
+
+        <div className="mt-10">
+          <RecentReports />
+        </div>
 
       </div>
-
     </div>
   );
-}
-
-function Card({ title, value }) {
-  return (
-    <div className="bg-white p-6 rounded-3xl shadow-lg">
-
-      <h2 className="text-gray-500">
-        {title}
-      </h2>
-
-      <p className="text-4xl font-bold mt-3">
-        {value}
-      </p>
-
-    </div>
-  );
-}
+};
 
 export default Dashboard;
