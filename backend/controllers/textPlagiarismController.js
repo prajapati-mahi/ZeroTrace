@@ -10,6 +10,15 @@ const calculateSimilarity = require(
   "../utils/similarity"
 );
 
+const detectAIContent = require(
+  "../utils/aiDetector"
+);
+
+console.log(
+  "AI Detector:",
+  detectAIContent
+);
+
 const checkTextPlagiarism = async (
   req,
   res
@@ -17,6 +26,7 @@ const checkTextPlagiarism = async (
   try {
 
     const { text } = req.body;
+    const aiResult = detectAIContent(text);
 
     if (!text) {
       return res.status(400).json({
@@ -158,16 +168,20 @@ const checkTextPlagiarism = async (
     }
 
     res.status(200).json({
-      plagiarismScore:
-        highestScore,
+  plagiarismScore:
+    highestScore,
 
-      sources:
-        matchedSources,
+  aiScore:
+    aiResult.aiScore,
 
-      matchedSentences:
-        matchedSentences,
-    });
+  aiRisk:
+    aiResult.aiRisk,
 
+  sources:
+    matchedSources,
+
+  matchedSentences,
+});
   } catch (error) {
 
     console.error(error);
