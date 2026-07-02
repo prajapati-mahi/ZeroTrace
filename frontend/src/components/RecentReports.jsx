@@ -1,8 +1,11 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const RecentReports = () => {
   const [reports, setReports] = useState([]);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchReports();
@@ -50,6 +53,9 @@ const RecentReports = () => {
         reports.map((report, index) => (
           <div
             key={report._id}
+            onClick={() =>
+              navigate(`/report/${report._id}`)
+            }
             className="
             flex
             justify-between
@@ -57,6 +63,12 @@ const RecentReports = () => {
             py-5
             border-b
             border-[#2a2a3e]
+            cursor-pointer
+            hover:bg-[#242438]
+            hover:px-4
+            rounded-xl
+            transition-all
+            duration-300
             "
           >
             <div>
@@ -67,7 +79,8 @@ const RecentReports = () => {
                 text-white
                 "
               >
-                Report #{index + 1}
+                {report.title ||
+                  `Report #${index + 1}`}
               </h3>
 
               <p
@@ -84,7 +97,6 @@ const RecentReports = () => {
             </div>
 
             <div className="text-right">
-
               <p
                 className="
                 text-cyan-400
@@ -92,7 +104,7 @@ const RecentReports = () => {
                 text-lg
                 "
               >
-                {report.score}%
+                {report.plagiarismScore}%
               </p>
 
               <p
@@ -100,13 +112,9 @@ const RecentReports = () => {
                 text-sm
                 font-medium
                 ${
-                  report.risk.includes(
-                    "LOW"
-                  )
+                  report.risk.includes("LOW")
                     ? "text-green-400"
-                    : report.risk.includes(
-                        "MEDIUM"
-                      )
+                    : report.risk.includes("MEDIUM")
                     ? "text-yellow-400"
                     : "text-red-400"
                 }
@@ -114,7 +122,6 @@ const RecentReports = () => {
               >
                 {report.risk}
               </p>
-
             </div>
           </div>
         ))

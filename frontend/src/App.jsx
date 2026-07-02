@@ -142,17 +142,48 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Dashboard from "./pages/Dashboard";
 import PDFChecker from "./pages/PDFChecker";
+import ReportDetails from "./pages/ReportDetails";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/checker" element={<Checker />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/pdf-checker" element={<PDFChecker />}/>
+
+        <Route
+          path="/"
+          element={<Home />}
+        />
+
+        <Route
+          path="/checker"
+          element={<Checker />}
+        />
+
+        <Route
+          path="/login"
+          element={<Login />}
+        />
+
+        <Route
+          path="/signup"
+          element={<Signup />}
+        />
+
+        <Route
+          path="/dashboard"
+          element={<Dashboard />}
+        />
+
+        <Route
+          path="/pdf-checker"
+          element={<PDFChecker />}
+        />
+
+        <Route
+          path="/report/:id"
+          element={<ReportDetails />}
+        />
+
       </Routes>
     </BrowserRouter>
   );
