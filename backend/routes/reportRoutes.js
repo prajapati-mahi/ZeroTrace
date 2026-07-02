@@ -4,13 +4,17 @@ const router = express.Router();
 
 const {
   generateReport,
-} = require(
-  "../controllers/reportController"
-);
+  getReportById,
+} = require("../controllers/reportController");
 
 router.post(
   "/generate",
   generateReport
+);
+
+router.get(
+  "/:id",
+  getReportById
 );
 
 module.exports = router;

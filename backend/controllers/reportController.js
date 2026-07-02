@@ -1,4 +1,5 @@
 const PDFDocument = require("pdfkit");
+const Report = require("../models/Report");
 
 const generateReport = async (req, res) => {
   try {
@@ -8,7 +9,6 @@ const generateReport = async (req, res) => {
       margin: 50,
     });
 
-    // Response Headers
     res.setHeader(
       "Content-Type",
       "application/pdf"
@@ -19,18 +19,16 @@ const generateReport = async (req, res) => {
       "attachment; filename=ZeroTrace_Report.pdf"
     );
 
-    // Pipe PDF to response
     doc.pipe(res);
-
-    // =========================
-    // HEADER
-    // =========================
 
     doc
       .fontSize(28)
-      .text("ZeroTrace Analysis Report", {
-        align: "center",
-      });
+      .text(
+        "ZeroTrace Analysis Report",
+        {
+          align: "center",
+        }
+      );
 
     doc.moveDown();
 
@@ -45,10 +43,6 @@ const generateReport = async (req, res) => {
 
     doc.moveDown(2);
 
-    // =========================
-    // ANALYSIS DETAILS
-    // =========================
-
     doc
       .fontSize(20)
       .text("Analysis Summary");
@@ -57,17 +51,17 @@ const generateReport = async (req, res) => {
 
     doc
       .fontSize(16)
-      .text(`Similarity Score: ${score}%`);
+      .text(
+        `Similarity Score: ${score}%`
+      );
 
     doc.moveDown();
 
-    doc.text(`Risk Level: ${risk}`);
+    doc.text(
+      `Risk Level: ${risk}`
+    );
 
     doc.moveDown(2);
-
-    // =========================
-    // INTERPRETATION
-    // =========================
 
     doc
       .fontSize(20)
@@ -78,24 +72,26 @@ const generateReport = async (req, res) => {
     doc.fontSize(14);
 
     if (score < 20) {
+
       doc.text(
-        "The uploaded documents show very low similarity and appear largely original. No significant plagiarism indicators were detected."
+        "The uploaded documents show very low similarity and appear largely original."
       );
+
     } else if (score < 50) {
+
       doc.text(
-        "The uploaded documents contain moderate overlap. Manual review is recommended to determine whether the similarity is acceptable."
+        "The uploaded documents contain moderate overlap."
       );
+
     } else {
+
       doc.text(
-        "The uploaded documents contain significant overlap and may indicate plagiarism. Further investigation is strongly recommended."
+        "The uploaded documents contain significant overlap and may indicate plagiarism."
       );
+
     }
 
     doc.moveDown(2);
-
-    // =========================
-    // FOOTER
-    // =========================
 
     doc
       .fontSize(12)
@@ -106,17 +102,53 @@ const generateReport = async (req, res) => {
         }
       );
 
-    // Finish PDF
     doc.end();
 
   } catch (error) {
+
     res.status(500).json({
       success: false,
       message: error.message,
     });
+
+  }
+};
+
+const getReportById = async (
+  req,
+  res
+) => {
+  try {
+
+    const report =
+      await Report.findById(
+        req.params.id
+      );
+
+    if (!report) {
+
+      return res.status(404).json({
+        message:
+          "Report not found",
+      });
+
+    }
+
+    res.status(200).json(
+      report
+    );
+
+  } catch (error) {
+
+    res.status(500).json({
+      message:
+        error.message,
+    });
+
   }
 };
 
 module.exports = {
   generateReport,
+  getReportById,
 };
