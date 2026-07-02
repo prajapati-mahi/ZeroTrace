@@ -21,14 +21,15 @@ const generateReport = async (req, res) => {
 
     doc.pipe(res);
 
+    // ==========================
+    // Header
+    // ==========================
+
     doc
       .fontSize(28)
-      .text(
-        "ZeroTrace Analysis Report",
-        {
-          align: "center",
-        }
-      );
+      .text("ZeroTrace Analysis Report", {
+        align: "center",
+      });
 
     doc.moveDown();
 
@@ -43,6 +44,10 @@ const generateReport = async (req, res) => {
 
     doc.moveDown(2);
 
+    // ==========================
+    // Summary
+    // ==========================
+
     doc
       .fontSize(20)
       .text("Analysis Summary");
@@ -51,17 +56,17 @@ const generateReport = async (req, res) => {
 
     doc
       .fontSize(16)
-      .text(
-        `Similarity Score: ${score}%`
-      );
+      .text(`Similarity Score: ${score}%`);
 
     doc.moveDown();
 
-    doc.text(
-      `Risk Level: ${risk}`
-    );
+    doc.text(`Risk Level: ${risk}`);
 
     doc.moveDown(2);
+
+    // ==========================
+    // Interpretation
+    // ==========================
 
     doc
       .fontSize(20)
@@ -72,79 +77,67 @@ const generateReport = async (req, res) => {
     doc.fontSize(14);
 
     if (score < 20) {
-
       doc.text(
-        "The uploaded documents show very low similarity and appear largely original."
+        "The uploaded document appears largely original with very low similarity."
       );
-
     } else if (score < 50) {
-
       doc.text(
-        "The uploaded documents contain moderate overlap."
+        "Moderate similarity detected. Manual review is recommended."
       );
-
     } else {
-
       doc.text(
-        "The uploaded documents contain significant overlap and may indicate plagiarism."
+        "High similarity detected. Possible plagiarism found."
       );
-
     }
 
     doc.moveDown(2);
 
+    // ==========================
+    // Footer
+    // ==========================
+
     doc
       .fontSize(12)
-      .text(
-        "Powered by ZeroTrace",
-        {
-          align: "center",
-        }
-      );
+      .text("Powered by ZeroTrace", {
+        align: "center",
+      });
 
     doc.end();
-
   } catch (error) {
-
     res.status(500).json({
       success: false,
       message: error.message,
     });
-
   }
 };
+
+// ======================================
+// Get Single Report
+// ======================================
 
 const getReportById = async (
   req,
   res
 ) => {
   try {
-
     const report =
       await Report.findById(
         req.params.id
       );
 
     if (!report) {
-
       return res.status(404).json({
-        message:
-          "Report not found",
+        success: false,
+        message: "Report not found",
       });
-
     }
 
-    res.status(200).json(
-      report
-    );
-
+    res.status(200).json(report);
   } catch (error) {
-
     res.status(500).json({
-      message:
-        error.message,
+      success: false,
+      message: error.message,
     });
-
   }
 };
 
