@@ -16,6 +16,7 @@ import ReportOverview from "../components/ReportOverview";
 import MatchedSources from "../components/MatchedSources";
 import AnalyticsCharts from "../components/AnalyticsCharts";
 import Interpretation from "../components/Interpretation";
+import SimilarityInsights from "../components/SimilarityInsights";
 
 const ReportDetails = () => {
 
@@ -311,6 +312,14 @@ const ReportDetails = () => {
           />
 
       </div>
+
+      <div className="mt-10">
+
+  <SimilarityInsights
+    report={report}
+  />
+
+</div>
       <div className="mt-10">
 
   <Interpretation
