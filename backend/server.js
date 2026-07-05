@@ -10,6 +10,7 @@ const reportRoutes = require("./routes/reportRoutes");
 const historyRoutes = require("./routes/historyRoutes");
 const dashboardRoutes = require("./routes/dashboardRoutes");
 const textPlagiarismRoutes = require("./routes/textPlagiarismRoutes");
+const authRoutes = require("./routes/authRoutes");
 
 dotenv.config();
 
@@ -60,6 +61,11 @@ app.use(
 app.use(
   "/api/text",
   textPlagiarismRoutes
+);
+
+app.use(
+  "/api/auth",
+  authRoutes
 );
 
 // Server Start
