@@ -6,10 +6,13 @@ const controller = require(
   "../controllers/textPlagiarismController"
 );
 
-console.log("Controller:", controller);
+const authMiddleware = require(
+  "../middlewares/authMiddleware"
+);
 
 router.post(
   "/check",
+  authMiddleware,
   controller.checkTextPlagiarism
 );
 

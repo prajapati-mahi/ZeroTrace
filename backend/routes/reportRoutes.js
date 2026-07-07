@@ -8,21 +8,27 @@ const {
   downloadReportPDF,
 } = require("../controllers/reportController");
 
-// Existing Route
+const authMiddleware = require(
+  "../middlewares/authMiddleware"
+);
+
+// Generate PDF (does not access DB)
 router.post(
   "/generate",
   generateReport
 );
 
-// Get Report
+// Get Report Details
 router.get(
   "/:id",
+  authMiddleware,
   getReportById
 );
 
-// Download PDF
+// Download Existing Report PDF
 router.get(
   "/pdf/:id",
+  authMiddleware,
   downloadReportPDF
 );
 

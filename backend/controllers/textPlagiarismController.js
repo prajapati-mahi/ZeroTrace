@@ -170,6 +170,8 @@ const checkTextPlagiarism = async (
     }
 
     const report = await Report.create({
+  user: req.user.id,
+
   title:
     text.length > 40
       ? text.substring(0, 40) + "..."
@@ -186,7 +188,8 @@ const checkTextPlagiarism = async (
   risk:
     aiResult.aiRisk,
 
-  matches: matchedSources,
+  matches:
+    matchedSources,
 });
 
 res.status(200).json({

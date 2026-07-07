@@ -6,8 +6,13 @@ const dashboardController = require(
   "../controllers/dashboardController"
 );
 
+const authMiddleware = require(
+  "../middlewares/authMiddleware"
+);
+
 router.get(
   "/",
+  authMiddleware,
   dashboardController.getDashboardStats
 );
 

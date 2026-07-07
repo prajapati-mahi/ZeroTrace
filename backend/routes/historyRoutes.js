@@ -1,4 +1,5 @@
 const express = require("express");
+
 const router = express.Router();
 
 const {
@@ -7,6 +8,14 @@ const {
   "../controllers/reportHistoryController"
 );
 
-router.get("/", getReports);
+const authMiddleware = require(
+  "../middlewares/authMiddleware"
+);
+
+router.get(
+  "/",
+  authMiddleware,
+  getReports
+);
 
 module.exports = router;

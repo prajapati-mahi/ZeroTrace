@@ -69,12 +69,14 @@ const getReportById = async (
   req,
   res
 ) => {
+
   try {
 
     const report =
-      await Report.findById(
-        req.params.id
-      );
+      await Report.findOne({
+        _id: req.params.id,
+        user: req.user.id,
+      });
 
     if (!report) {
 
@@ -99,6 +101,7 @@ const getReportById = async (
     });
 
   }
+
 };
 
 // ======================================
@@ -111,9 +114,10 @@ const downloadReportPDF =
     try {
 
       const report =
-        await Report.findById(
-          req.params.id
-        );
+        await Report.findOne({
+          _id: req.params.id,
+          user: req.user.id,
+        });
 
       if (!report) {
 

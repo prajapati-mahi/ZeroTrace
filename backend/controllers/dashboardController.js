@@ -1,14 +1,13 @@
 const Report = require("../models/Report");
 
-const getDashboardStats = async (
-  req,
-  res
-) => {
+const getDashboardStats = async (req, res) => {
   try {
-    const reports = await Report.find();
 
-    const totalReports =
-      reports.length;
+    const reports = await Report.find({
+      user: req.user.id,
+    });
+
+    const totalReports = reports.length;
 
     const averageSimilarity =
       totalReports === 0
@@ -16,7 +15,7 @@ const getDashboardStats = async (
         : (
             reports.reduce(
               (sum, report) =>
-                sum + report.score,
+                sum + report.plagiarismScore,
               0
             ) / totalReports
           ).toFixed(2);
@@ -26,27 +25,25 @@ const getDashboardStats = async (
         ? 0
         : Math.max(
             ...reports.map(
-              (r) => r.score
+              (report) =>
+                report.plagiarismScore
             )
           );
 
-    const lowRisk =
-      reports.filter(
-        (r) =>
-          r.risk === "LOW RISK"
-      ).length;
+    const lowRisk = reports.filter(
+      (report) =>
+        report.risk === "LOW"
+    ).length;
 
-    const mediumRisk =
-      reports.filter(
-        (r) =>
-          r.risk === "MEDIUM RISK"
-      ).length;
+    const mediumRisk = reports.filter(
+      (report) =>
+        report.risk === "MEDIUM"
+    ).length;
 
-    const highRisk =
-      reports.filter(
-        (r) =>
-          r.risk === "HIGH RISK"
-      ).length;
+    const highRisk = reports.filter(
+      (report) =>
+        report.risk === "HIGH"
+    ).length;
 
     res.status(200).json({
       success: true,
