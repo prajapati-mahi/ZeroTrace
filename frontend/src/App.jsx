@@ -134,7 +134,7 @@
 
 // export default App;
 
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 
 import Home from "./pages/Home";
 import Checker from "./pages/Checker";
@@ -146,46 +146,44 @@ import ReportDetails from "./pages/ReportDetails";
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
+    <Routes>
 
-        <Route
-          path="/"
-          element={<Home />}
-        />
+      <Route
+        path="/"
+        element={<Home />}
+      />
 
-        <Route
-          path="/checker"
-          element={<Checker />}
-        />
+      <Route
+        path="/checker"
+        element={<Checker />}
+      />
 
-        <Route
-          path="/login"
-          element={<Login />}
-        />
+      <Route
+        path="/login"
+        element={<Login />}
+      />
 
-        <Route
-          path="/signup"
-          element={<Signup />}
-        />
+      <Route
+        path="/signup"
+        element={<Signup />}
+      />
 
-        <Route
-          path="/dashboard"
-          element={<Dashboard />}
-        />
+      <Route
+        path="/dashboard"
+        element={<Dashboard />}
+      />
 
-        <Route
-          path="/pdf-checker"
-          element={<PDFChecker />}
-        />
+      <Route
+        path="/pdf-checker"
+        element={<PDFChecker />}
+      />
 
-        <Route
-          path="/report/:id"
-          element={<ReportDetails />}
-        />
+      <Route
+        path="/report/:id"
+        element={<ReportDetails />}
+      />
 
-      </Routes>
-    </BrowserRouter>
+    </Routes>
   );
 }
 
