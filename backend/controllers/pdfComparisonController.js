@@ -72,12 +72,25 @@ const comparePDFs = async (req, res) => {
       risk = "MEDIUM RISK";
     }
 
-    //Save Report to MongoDB
     await Report.create({
-      score,
-      risk,
-      matches,
-    });
+  user: req.user.id,
+
+  title: `${file1.originalname} vs ${file2.originalname}`,
+
+  text: "",
+
+  plagiarismScore: score,
+
+  aiScore: 0,
+
+  risk,
+
+  matches: matches.map((sentence) => ({
+    title: "Matched Sentence",
+    link: "",
+    score,
+  })),
+});
 
     //console.log(Report);
 

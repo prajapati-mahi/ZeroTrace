@@ -146,8 +146,49 @@ const downloadReportPDF =
 
   };
 
+  // ======================================
+// Delete Report
+// ======================================
+
+const deleteReport = async (req, res) => {
+
+  try {
+
+    const report = await Report.findOne({
+      _id: req.params.id,
+      user: req.user.id,
+    });
+
+    if (!report) {
+
+      return res.status(404).json({
+        success: false,
+        message: "Report not found",
+      });
+
+    }
+
+    await Report.findByIdAndDelete(report._id);
+
+    res.status(200).json({
+      success: true,
+      message: "Report deleted successfully",
+    });
+
+  } catch (error) {
+
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+
+  }
+
+};
+
 module.exports = {
   generateReport,
   getReportById,
   downloadReportPDF,
+  deleteReport,
 };

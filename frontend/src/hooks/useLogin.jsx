@@ -2,19 +2,20 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../services/api";
 import toast from "react-hot-toast";
+import {useAuth,} from "../context/AuthContext";
 
-const useSignup = () => {
+const useLogin = () => {
+    const { login } = useAuth();
   const navigate = useNavigate();
+
 
   const [loading, setLoading] =
     useState(false);
 
   const [formData, setFormData] =
     useState({
-      name: "",
       email: "",
       password: "",
-      confirmPassword: "",
     });
 
   const handleChange = (e) => {
@@ -25,66 +26,46 @@ const useSignup = () => {
     }));
   };
 
-  const validate = () => {
+  const handleLogin = async (e) => {
+    e.preventDefault();
+
     if (
-      !formData.name ||
       !formData.email ||
-      !formData.password ||
-      !formData.confirmPassword
+      !formData.password
     ) {
       toast.error(
         "Please fill all fields."
       );
-      return false;
+      return;
     }
-
-    if (
-      formData.password !==
-      formData.confirmPassword
-    ) {
-      toast.error(
-        "Passwords do not match."
-      );
-      return false;
-    }
-
-    if (
-      formData.password.length < 8
-    ) {
-      toast.error(
-        "Password should contain at least 8 characters."
-      );
-      return false;
-    }
-
-    return true;
-  };
-
-  const handleSignup = async (e) => {
-    e.preventDefault();
-
-    if (!validate()) return;
 
     try {
       setLoading(true);
 
-      const res= await api.post(
-  "/auth/register",
+      const res = await api.post(
+  "/auth/login",
   formData
 );
 
+      login(
+  res.data.token,
+  res.data.user
+);
+
       toast.success(
-        "Account created successfully!"
+        "Login Successful!"
       );
 
-      navigate("/login");
+      navigate("/dashboard", {
+  replace: true,
+});
 
     } catch (error) {
 
       toast.error(
         error.response?.data
           ?.message ||
-          "Signup Failed"
+          "Login Failed"
       );
 
     } finally {
@@ -97,9 +78,9 @@ const useSignup = () => {
   return {
     formData,
     loading,
-    handleSignup,
+    handleLogin,
     handleChange,
   };
 };
 
-export default useSignup;
+export default useLogin;

@@ -11,6 +11,9 @@ const historyRoutes = require("./routes/historyRoutes");
 const dashboardRoutes = require("./routes/dashboardRoutes");
 const textPlagiarismRoutes = require("./routes/textPlagiarismRoutes");
 const authRoutes = require("./routes/authRoutes");
+const profileRoutes=require(
+"./routes/profileRoutes"
+);
 
 dotenv.config();
 
@@ -61,6 +64,11 @@ app.use(
 app.use(
   "/api/text",
   textPlagiarismRoutes
+);
+
+app.use(
+"/api/profile",
+profileRoutes
 );
 
 app.use(

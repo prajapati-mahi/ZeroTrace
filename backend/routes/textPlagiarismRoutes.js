@@ -2,18 +2,16 @@ const express = require("express");
 
 const router = express.Router();
 
-const controller = require(
-  "../controllers/textPlagiarismController"
-);
+const {
+    checkTextPlagiarism,
+} = require("../controllers/textPlagiarismController");
 
-const authMiddleware = require(
-  "../middlewares/authMiddleware"
-);
+const authMiddleware = require("../middlewares/authMiddleware");
 
 router.post(
-  "/check",
-  authMiddleware,
-  controller.checkTextPlagiarism
+    "/check",
+    authMiddleware,
+    checkTextPlagiarism
 );
 
 module.exports = router;

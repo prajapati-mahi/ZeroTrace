@@ -1,31 +1,34 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import { Link } from "react-router-dom";
+import api from "../services/api";
 
 import Navbar from "../components/Navbar";
 import DashboardStats from "../components/DashboardStats";
 import StatsCard from "../components/StatsCard";
 import RecentReports from "../components/RecentReports";
+import LogoutButton from "../components/LogoutButton";
+import { useAuth } from "../context/AuthContext";
 
 import {
   FaFileAlt,
   FaRobot,
   FaShieldAlt,
-  FaGlobe,
 } from "react-icons/fa";
 
 const Dashboard = () => {
+  const { user, token } = useAuth();
+
   const [stats, setStats] = useState(null);
 
   useEffect(() => {
-    fetchStats();
-  }, []);
+    if (token) {
+      fetchStats();
+    }
+  }, [token]);
 
   const fetchStats = async () => {
     try {
-      const res = await axios.get(
-        "http://localhost:5000/api/dashboard"
-      );
-
+      const res = await api.get("/dashboard");
       setStats(res.data);
     } catch (error) {
       console.log(error);
@@ -45,13 +48,15 @@ const Dashboard = () => {
       className="
       min-h-screen
       bg-[#0a0a0f]
-      text-[#f0f0f5]
+      text-white
       px-10
       py-6
       relative
       overflow-hidden
       "
     >
+      {/* Background Glow */}
+
       <div
         className="
         absolute
@@ -84,27 +89,86 @@ const Dashboard = () => {
 
         <Navbar />
 
-        <div className="mt-8 mb-10">
-          <h1
-            className="
-            text-6xl
-            font-black
-            bg-gradient-to-r
-            from-[#6c63ff]
-            to-[#00d4ff]
-            bg-clip-text
-            text-transparent
-            "
-          >
-            ZeroTrace Dashboard
-          </h1>
+        {/* Hero Section */}
 
-          <p className="text-[#a8a8b8] mt-2">
-            AI-Powered Plagiarism Intelligence
-          </p>
+        <div className="mt-10 mb-12">
+
+          <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-8">
+
+            <div>
+
+              <p className="text-cyan-400 font-semibold tracking-[4px] uppercase">
+
+                Dashboard
+
+              </p>
+
+              <h1 className="text-5xl font-black mt-3">
+
+                Welcome back,
+
+                <span className="text-cyan-400">
+
+                  {" "}
+                  {user?.name || "User"}
+
+                </span>
+
+                👋
+
+              </h1>
+
+              <p className="text-gray-400 mt-5 text-lg">
+
+                Manage plagiarism reports, AI analysis and PDF comparisons effortlessly.
+
+              </p>
+
+            </div>
+
+            <div className="flex flex-wrap gap-4">
+
+              <Link
+                to="/checker"
+                className="
+                bg-cyan-500
+                hover:bg-cyan-600
+                px-6
+                py-3
+                rounded-xl
+                font-semibold
+                transition
+                "
+              >
+                + New Check
+              </Link>
+
+              <Link
+                to="/history"
+                className="
+                border
+                border-[#2d2d44]
+                hover:border-cyan-400
+                px-6
+                py-3
+                rounded-xl
+                transition
+                "
+              >
+                View History
+              </Link>
+
+              <LogoutButton />
+
+            </div>
+
+          </div>
+
         </div>
 
-        <div className="grid md:grid-cols-4 gap-6">
+        {/* Stats */}
+
+        <div className="grid md:grid-cols-2 xl:grid-cols-4 gap-6">
 
           <StatsCard
             title="Reports"
@@ -113,36 +177,73 @@ const Dashboard = () => {
           />
 
           <StatsCard
-            title="Average"
+            title="Average Similarity"
             value={`${stats.averageSimilarity}%`}
             icon={<FaRobot />}
           />
 
           <StatsCard
-            title="Highest"
+            title="Highest Similarity"
             value={`${stats.highestSimilarity}%`}
             icon={<FaShieldAlt />}
           />
 
           <StatsCard
-            title="Sources"
-            value="Web"
-            icon={<FaGlobe />}
+            title="Average AI"
+            value={`${stats.averageAI || 0}%`}
+            icon={<FaRobot />}
           />
 
         </div>
 
-        <div className="mt-10">
-          <DashboardStats
-            stats={stats}
-          />
+        {/* Analytics */}
+
+        <div className="mt-14">
+
+          <h2 className="text-3xl font-bold mb-6">
+
+            Analytics Overview
+
+          </h2>
+
+          <DashboardStats stats={stats} />
+
         </div>
 
-        <div className="mt-10">
+        {/* Recent Reports */}
+
+        <div className="mt-14">
+
+          <div className="flex justify-between items-center mb-6">
+
+            <h2 className="text-3xl font-bold">
+
+              Recent Activity
+
+            </h2>
+
+            <Link
+              to="/history"
+              className="
+              bg-cyan-500
+              hover:bg-cyan-600
+              px-5
+              py-2
+              rounded-lg
+              transition
+              "
+            >
+              View All
+            </Link>
+
+          </div>
+
           <RecentReports />
+
         </div>
 
       </div>
+
     </div>
   );
 };

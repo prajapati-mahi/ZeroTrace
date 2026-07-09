@@ -1,18 +1,19 @@
 const express = require("express");
 
-const router = express.Router();
-
 const {
   generateReport,
   getReportById,
   downloadReportPDF,
+  deleteReport,
 } = require("../controllers/reportController");
+
+const router = express.Router();
 
 const authMiddleware = require(
   "../middlewares/authMiddleware"
 );
 
-// Generate PDF (does not access DB)
+// Generate PDF
 router.post(
   "/generate",
   generateReport
@@ -25,11 +26,18 @@ router.get(
   getReportById
 );
 
-// Download Existing Report PDF
+// Download Report PDF
 router.get(
   "/pdf/:id",
   authMiddleware,
   downloadReportPDF
+);
+
+// Delete Report
+router.delete(
+  "/:id",
+  authMiddleware,
+  deleteReport
 );
 
 module.exports = router;

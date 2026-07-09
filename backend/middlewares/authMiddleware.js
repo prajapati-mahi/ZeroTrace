@@ -30,6 +30,7 @@ const authMiddleware = async (
         token,
         process.env.JWT_SECRET
       );
+      console.log("Decoded User:", decoded);
 
     req.user = decoded;
 

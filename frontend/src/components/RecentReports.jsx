@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import api from "../services/api";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 const RecentReports = () => {
+  const { token } = useAuth();
   const [reports, setReports] = useState([]);
 
   const navigate = useNavigate();
@@ -13,9 +15,9 @@ const RecentReports = () => {
 
   const fetchReports = async () => {
     try {
-      const res = await axios.get(
-        "http://localhost:5000/api/history"
-      );
+      const res = await api.get(
+  "/history"
+);
 
       setReports(res.data.reports || []);
     } catch (error) {

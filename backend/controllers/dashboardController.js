@@ -20,6 +20,18 @@ const getDashboardStats = async (req, res) => {
             ) / totalReports
           ).toFixed(2);
 
+
+    const averageAI =
+  totalReports === 0
+    ? 0
+    : (
+        reports.reduce(
+          (sum, report) =>
+            sum + report.aiScore,
+          0
+        ) / totalReports
+      ).toFixed(2);
+
     const highestSimilarity =
       totalReports === 0
         ? 0
@@ -53,7 +65,8 @@ const getDashboardStats = async (req, res) => {
       lowRisk,
       mediumRisk,
       highRisk,
-    });
+      averageAI,
+        });
 
   } catch (error) {
 

@@ -1,47 +1,52 @@
 const mongoose = require("mongoose");
 
 const reportSchema = new mongoose.Schema(
-  {
-    title: {
-      type: String,
-      default: "",
+{
+    user:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"User",
+        required:true,
     },
 
-    text: {
-      type: String,
-      default: "",
+    title:{
+        type:String,
+        default:"",
     },
 
-    plagiarismScore: {
-      type: Number,
-      default: 0,
+    text:{
+        type:String,
+        default:"",
     },
 
-    aiScore: {
-      type: Number,
-      default: 0,
+    plagiarismScore:{
+        type:Number,
+        default:0,
     },
 
-    risk: {
-      type: String,
-      default: "LOW",
+    aiScore:{
+        type:Number,
+        default:0,
     },
 
-    matches: [
-      {
-        title: String,
-        link: String,
-        score: Number,
-      },
+    risk:{
+        type:String,
+        default:"LOW",
+    },
+
+    matches:[
+        {
+            title:String,
+            link:String,
+            score:Number,
+        },
     ],
-  },
-  {
-    timestamps: true,
-  }
+},
+{
+    timestamps:true,
+}
 );
 
-module.exports =
-  mongoose.model(
-    "Report",
-    reportSchema
-  );
+module.exports = mongoose.model(
+  "Report",
+  reportSchema
+);
