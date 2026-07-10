@@ -13,9 +13,6 @@ const History = () => {
   const [reports, setReports] =
     useState([]);
 
-  const [search, setSearch] =
-  useState("");
-
 const [filter, setFilter] =
   useState("ALL");
 
@@ -48,6 +45,11 @@ const [filter, setFilter] =
     }
 
   };
+
+  const [search, setSearch] = useState("");
+
+const [riskFilter, setRiskFilter] =
+  useState("ALL");
 
   const deleteReport = async (id) => {
 
@@ -228,6 +230,63 @@ const filteredReports =
 </div>
 
             <p className="text-gray-400 mt-3">
+              <div className="flex gap-5 mt-8 mb-10">
+
+  <input
+    type="text"
+    placeholder="Search Reports..."
+    value={search}
+    onChange={(e) =>
+      setSearch(e.target.value)
+    }
+    className="
+      bg-[#151523]
+      border
+      border-[#2D2D44]
+      rounded-xl
+      px-5
+      py-3
+      w-80
+      outline-none
+      focus:border-cyan-400
+    "
+  />
+
+  <select
+    value={riskFilter}
+    onChange={(e) =>
+      setRiskFilter(e.target.value)
+    }
+    className="
+      bg-[#151523]
+      border
+      border-[#2D2D44]
+      rounded-xl
+      px-5
+      py-3
+      outline-none
+      focus:border-cyan-400
+    "
+  >
+    <option value="ALL">
+      All Risk
+    </option>
+
+    <option value="LOW">
+      LOW
+    </option>
+
+    <option value="MEDIUM">
+      MEDIUM
+    </option>
+
+    <option value="HIGH">
+      HIGH
+    </option>
+
+  </select>
+
+</div>
 
               All your plagiarism reports in one place.
 

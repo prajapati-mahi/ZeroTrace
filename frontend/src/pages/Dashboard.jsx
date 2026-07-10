@@ -8,6 +8,7 @@ import StatsCard from "../components/StatsCard";
 import RecentReports from "../components/RecentReports";
 import LogoutButton from "../components/LogoutButton";
 import { useAuth } from "../context/AuthContext";
+import AnalyticsCharts from "../components/AnalyticsCharts";
 
 import {
   FaFileAlt,
@@ -209,6 +210,14 @@ const Dashboard = () => {
           <DashboardStats stats={stats} />
 
         </div>
+
+        <div className="mt-12">
+
+    <AnalyticsCharts
+        stats={stats}
+    />
+
+</div>
 
         {/* Recent Reports */}
 

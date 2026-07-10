@@ -1,108 +1,166 @@
 import {
+  PieChart,
+  Pie,
+  Cell,
+  Tooltip,
   ResponsiveContainer,
-  RadialBarChart,
-  RadialBar,
   BarChart,
   Bar,
   XAxis,
   YAxis,
-  Tooltip,
-  CartesianGrid,
 } from "recharts";
 
-const AnalyticsCharts = ({ report }) => {
-  const radialData = [
+const COLORS = [
+  "#06b6d4",
+  "#facc15",
+  "#ef4444",
+];
+
+const AnalyticsCharts = ({
+  stats,
+}) => {
+
+  const pieData = [
     {
-      name: "Plagiarism",
-      value: report.plagiarismScore,
-      fill: "#ff6b6b",
+      name: "Low",
+      value: stats.lowRisk,
     },
     {
-      name: "AI",
-      value: report.aiScore,
-      fill: "#6c63ff",
+      name: "Medium",
+      value: stats.mediumRisk,
+    },
+    {
+      name: "High",
+      value: stats.highRisk,
     },
   ];
 
-  const comparisonData = [
+  const barData = [
     {
-      name: "Plagiarism",
-      score: report.plagiarismScore,
+      name: "Reports",
+      value: stats.totalReports,
+    },
+    {
+      name: "Similarity",
+      value: Number(
+        stats.averageSimilarity
+      ),
     },
     {
       name: "AI",
-      score: report.aiScore,
+      value: Number(
+        stats.averageAI
+      ),
     },
   ];
 
   return (
-    <div className="grid lg:grid-cols-2 gap-8 mt-10">
 
-      {/* Circular Chart */}
+    <div className="grid lg:grid-cols-2 gap-8">
 
-      <div className="bg-[#1a1a2e] border border-[#2a2a3e] rounded-3xl p-8 shadow-xl">
+      <div
+        className="
+        bg-[#151523]
+        rounded-3xl
+        p-8
+        border
+        border-[#2d2d44]
+        "
+      >
 
-        <h2 className="text-2xl font-bold text-cyan-400 mb-8">
-          Score Overview
+        <h2 className="text-2xl font-bold mb-6">
+
+          Risk Distribution
+
         </h2>
 
         <ResponsiveContainer
           width="100%"
           height={320}
         >
-          <RadialBarChart
-            innerRadius="25%"
-            outerRadius="90%"
-            data={radialData}
-            startAngle={180}
-            endAngle={0}
-          >
-            <RadialBar
+
+          <PieChart>
+
+            <Pie
+              data={pieData}
               dataKey="value"
-              cornerRadius={10}
-            />
+              outerRadius={110}
+            >
+
+              {pieData.map(
+                (
+                  entry,
+                  index
+                ) => (
+                  <Cell
+                    key={index}
+                    fill={
+                      COLORS[
+                        index
+                      ]
+                    }
+                  />
+                )
+              )}
+
+            </Pie>
 
             <Tooltip />
-          </RadialBarChart>
+
+          </PieChart>
+
         </ResponsiveContainer>
 
       </div>
 
-      {/* Bar Chart */}
+      <div
+        className="
+        bg-[#151523]
+        rounded-3xl
+        p-8
+        border
+        border-[#2d2d44]
+        "
+      >
 
-      <div className="bg-[#1a1a2e] border border-[#2a2a3e] rounded-3xl p-8 shadow-xl">
+        <h2 className="text-2xl font-bold mb-6">
 
-        <h2 className="text-2xl font-bold text-cyan-400 mb-8">
-          Similarity Comparison
+          Overview
+
         </h2>
 
         <ResponsiveContainer
           width="100%"
           height={320}
         >
-          <BarChart data={comparisonData}>
 
-            <CartesianGrid stroke="#2a2a3e" />
+          <BarChart
+            data={barData}
+          >
 
-            <XAxis dataKey="name" />
+            <XAxis
+              dataKey="name"
+            />
 
-            <YAxis domain={[0, 100]} />
+            <YAxis />
 
             <Tooltip />
 
             <Bar
-              dataKey="score"
-              fill="#6c63ff"
-              radius={[10, 10, 0, 0]}
+              dataKey="value"
+              fill="#06b6d4"
             />
 
           </BarChart>
+
         </ResponsiveContainer>
 
       </div>
 
     </div>
+
   );
+
 };
 
 export default AnalyticsCharts;

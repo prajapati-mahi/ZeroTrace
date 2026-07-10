@@ -1,3 +1,5 @@
+import { FaUserCircle } from "react-icons/fa";
+import { Link } from "react-router-dom";
 const Navbar = () => {
   return (
     <div
@@ -26,6 +28,13 @@ const Navbar = () => {
         <p className="text-zinc-400 mt-2">
           AI-Powered Plagiarism Detection
         </p>
+
+        <Link
+  to="/settings"
+  className="hover:text-cyan-400 transition"
+>
+  Settings
+</Link>
       </div>
     </div>
   );

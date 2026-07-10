@@ -10,6 +10,7 @@ import ReportDetails from "./pages/ReportDetails";
 import ProtectedRoute from "./components/ProtectedRoute";
 import History from "./pages/History";
 import Profile from "./pages/Profile";
+import Settings from "./pages/Settings";
 
 function App() {
   return (
@@ -66,6 +67,15 @@ function App() {
         path="/pdf-checker"
         element={<PDFChecker />}
       />
+
+      <Route
+  path="/settings"
+  element={
+    <ProtectedRoute>
+      <Settings />
+    </ProtectedRoute>
+  }
+/>
 
       <Route
   path="/report/:id"

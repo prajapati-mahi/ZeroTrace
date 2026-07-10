@@ -7,12 +7,16 @@ const getProfile = async (req, res) => {
 
     const user =
       await User.findById(req.user.id)
-      .select("-password");
+      .select("-password").lean();
 
     const reports =
       await Report.find({
         user:req.user.id,
       });
+
+    user.createdAt =
+user.createdAt ||
+new Date();
 
     const totalReports =
       reports.length;

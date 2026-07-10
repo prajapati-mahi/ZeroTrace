@@ -26,14 +26,29 @@ const DashboardStats = ({ stats }) => {
     },
   ];
 
-  const chartData = [
+  const similarityData = [
     {
       name: "Average",
-      value: stats.averageSimilarity || 0,
+      value: Number(stats.averageSimilarity) || 0,
     },
     {
       name: "Highest",
-      value: stats.highestSimilarity || 0,
+      value: Number(stats.highestSimilarity) || 0,
+    },
+  ];
+
+  const overviewData = [
+    {
+      name: "Reports",
+      value: stats.totalReports || 0,
+    },
+    {
+      name: "Similarity",
+      value: Number(stats.averageSimilarity) || 0,
+    },
+    {
+      name: "AI",
+      value: Number(stats.averageAI) || 0,
     },
   ];
 
@@ -46,151 +61,117 @@ const DashboardStats = ({ stats }) => {
   return (
     <div className="space-y-10">
 
-      <div className="grid md:grid-cols-3 gap-6">
+      {/* ================= SUMMARY CARDS ================= */}
 
-        <div
-          className="
-          bg-[#1a1a2e]
-          border
-          border-[#2a2a3e]
-          rounded-3xl
-          p-6
-          shadow-xl
-          hover:border-[#6c63ff]
-          hover:-translate-y-1
-          transition-all
-          "
-        >
+      <div className="grid md:grid-cols-3 lg:grid-cols-6 gap-6">
+
+        <div className="bg-[#1a1a2e] border border-[#2a2a3e] rounded-3xl p-6 shadow-xl">
           <h3 className="text-[#a8a8b8]">
             Total Reports
           </h3>
 
-          <p className="text-5xl font-black text-white mt-3">
+          <p className="text-5xl font-black mt-3">
             {stats.totalReports}
           </p>
         </div>
 
-        <div
-          className="
-          bg-[#1a1a2e]
-          border
-          border-[#2a2a3e]
-          rounded-3xl
-          p-6
-          shadow-xl
-          hover:border-[#00d4ff]
-          hover:-translate-y-1
-          transition-all
-          "
-        >
+        <div className="bg-[#1a1a2e] border border-[#2a2a3e] rounded-3xl p-6 shadow-xl">
           <h3 className="text-[#a8a8b8]">
             Average Similarity
           </h3>
 
-          <p className="text-5xl font-black text-white mt-3">
+          <p className="text-5xl font-black mt-3">
             {stats.averageSimilarity}%
           </p>
         </div>
 
-        <div
-          className="
-          bg-[#1a1a2e]
-          border
-          border-[#2a2a3e]
-          rounded-3xl
-          p-6
-          shadow-xl
-          hover:border-[#ff6b6b]
-          hover:-translate-y-1
-          transition-all
-          "
-        >
+        <div className="bg-[#1a1a2e] border border-[#2a2a3e] rounded-3xl p-6 shadow-xl">
           <h3 className="text-[#a8a8b8]">
             Highest Similarity
           </h3>
 
-          <p className="text-5xl font-black text-white mt-3">
+          <p className="text-5xl font-black mt-3">
             {stats.highestSimilarity}%
+          </p>
+        </div>
+
+        <div className="bg-[#1a1a2e] border border-[#2a2a3e] rounded-3xl p-6 shadow-xl">
+          <h3 className="text-[#a8a8b8]">
+            Highest AI
+          </h3>
+
+          <p className="text-5xl font-black mt-3">
+            {stats.highestAI || 0}%
+          </p>
+        </div>
+
+        <div className="bg-[#1a1a2e] border border-[#2a2a3e] rounded-3xl p-6 shadow-xl">
+          <h3 className="text-[#a8a8b8]">
+            This Month
+          </h3>
+
+          <p className="text-5xl font-black mt-3">
+            {stats.reportsThisMonth || 0}
+          </p>
+        </div>
+
+        <div className="bg-[#1a1a2e] border border-[#2a2a3e] rounded-3xl p-6 shadow-xl">
+          <h3 className="text-[#a8a8b8]">
+            Sources Found
+          </h3>
+
+          <p className="text-5xl font-black mt-3">
+            {stats.totalSources || 0}
           </p>
         </div>
 
       </div>
 
-      <div className="grid md:grid-cols-2 gap-8">
+      {/* ================= CHARTS ================= */}
 
-        <div
-          className="
-          bg-[#1a1a2e]
-          border
-          border-[#2a2a3e]
-          rounded-3xl
-          p-8
-          shadow-xl
-          "
-        >
-          <h2
-            className="
-            text-2xl
-            font-bold
-            mb-6
-            bg-gradient-to-r
-            from-[#6c63ff]
-            to-[#00d4ff]
-            bg-clip-text
-            text-transparent
-            "
-          >
+      <div className="grid lg:grid-cols-2 gap-8">
+
+        {/* Similarity Chart */}
+
+        <div className="bg-[#1a1a2e] border border-[#2a2a3e] rounded-3xl p-8 shadow-xl">
+
+          <h2 className="text-2xl font-bold mb-6 text-[#6c63ff]">
+
             Similarity Analysis
+
           </h2>
 
           <ResponsiveContainer
             width="100%"
             height={320}
           >
-            <BarChart data={chartData}>
-              <XAxis
-                dataKey="name"
-                stroke="#a8a8b8"
-              />
+            <BarChart data={similarityData}>
 
-              <YAxis
-                stroke="#a8a8b8"
-              />
+              <XAxis dataKey="name" />
+
+              <YAxis />
 
               <Tooltip />
 
               <Bar
                 dataKey="value"
                 fill="#6c63ff"
-                radius={[12, 12, 0, 0]}
+                radius={[10, 10, 0, 0]}
               />
+
             </BarChart>
           </ResponsiveContainer>
+
         </div>
 
-        <div
-          className="
-          bg-[#1a1a2e]
-          border
-          border-[#2a2a3e]
-          rounded-3xl
-          p-8
-          shadow-xl
-          "
-        >
-          <h2
-            className="
-            text-2xl
-            font-bold
-            mb-6
-            bg-gradient-to-r
-            from-[#00d4ff]
-            to-[#6c63ff]
-            bg-clip-text
-            text-transparent
-            "
-          >
+        {/* Risk Distribution */}
+
+        <div className="bg-[#1a1a2e] border border-[#2a2a3e] rounded-3xl p-8 shadow-xl">
+
+          <h2 className="text-2xl font-bold mb-6 text-cyan-400">
+
             Risk Distribution
+
           </h2>
 
           <ResponsiveContainer
@@ -198,6 +179,7 @@ const DashboardStats = ({ stats }) => {
             height={320}
           >
             <PieChart>
+
               <Pie
                 data={riskData}
                 dataKey="value"
@@ -216,9 +198,47 @@ const DashboardStats = ({ stats }) => {
               </Pie>
 
               <Tooltip />
+
             </PieChart>
+
           </ResponsiveContainer>
+
         </div>
+
+      </div>
+
+      {/* ================= OVERVIEW ================= */}
+
+      <div className="bg-[#1a1a2e] border border-[#2a2a3e] rounded-3xl p-8 shadow-xl">
+
+        <h2 className="text-2xl font-bold mb-6">
+
+          Overview
+
+        </h2>
+
+        <ResponsiveContainer
+          width="100%"
+          height={300}
+        >
+
+          <BarChart data={overviewData}>
+
+            <XAxis dataKey="name" />
+
+            <YAxis />
+
+            <Tooltip />
+
+            <Bar
+              dataKey="value"
+              fill="#00d4ff"
+              radius={[10, 10, 0, 0]}
+            />
+
+          </BarChart>
+
+        </ResponsiveContainer>
 
       </div>
 
