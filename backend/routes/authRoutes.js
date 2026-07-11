@@ -7,22 +7,22 @@ const {
   loginUser,
 } = require("../controllers/authController");
 
-// ============================
-// Register User
-// ============================
-
+// Register
 router.post(
   "/register",
   registerUser
 );
 
-// ============================
-// Login User
-// ============================
-
+// Login
 router.post(
   "/login",
   loginUser
 );
+
+// We'll add this later
+// router.post(
+//   "/forgot-password",
+//   forgotPassword
+// );
 
 module.exports = router;

@@ -9,6 +9,7 @@ import RecentReports from "../components/RecentReports";
 import LogoutButton from "../components/LogoutButton";
 import { useAuth } from "../context/AuthContext";
 import AnalyticsCharts from "../components/AnalyticsCharts";
+import SkeletonCard from "../components/SkeletonCard";
 
 import {
   FaFileAlt,
@@ -37,12 +38,21 @@ const Dashboard = () => {
   };
 
   if (!stats) {
-    return (
-      <div className="min-h-screen bg-[#0a0a0f] text-white flex items-center justify-center">
-        Loading Dashboard...
+  return (
+    <div className="min-h-screen bg-[#09090F] p-10">
+
+      <div className="grid md:grid-cols-4 gap-6">
+
+        <SkeletonCard />
+        <SkeletonCard />
+        <SkeletonCard />
+        <SkeletonCard />
+
       </div>
-    );
-  }
+
+    </div>
+  );
+}
 
   return (
     <div

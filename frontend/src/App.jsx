@@ -11,6 +11,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import History from "./pages/History";
 import Profile from "./pages/Profile";
 import Settings from "./pages/Settings";
+import ForgotPassword from "./pages/ForgotPassword";
 
 function App() {
   return (
@@ -84,6 +85,10 @@ function App() {
       <ReportDetails />
     </ProtectedRoute>
   }
+/>
+<Route
+  path="/forgot-password"
+  element={<ForgotPassword />}
 />
 
     </Routes>

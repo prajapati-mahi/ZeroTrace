@@ -4,7 +4,8 @@ import {
   useState,
 } from "react";
 import { Link } from "react-router-dom";
-import toast from "react-hot-toast";
+import { toast } from "react-toastify";
+import SkeletonCard from "../components/SkeletonCard";
 
 import api from "../services/api";
 
@@ -118,15 +119,22 @@ const filteredReports =
     search,
     filter,
   ]);
-  if (loading) {
+  if (!stats) {
+  return (
+    <div className="min-h-screen bg-[#09090F] p-10">
 
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-[#09090F] text-white">
-        Loading Reports...
+      <div className="grid md:grid-cols-4 gap-6">
+
+        <SkeletonCard />
+        <SkeletonCard />
+        <SkeletonCard />
+        <SkeletonCard />
+
       </div>
-    );
 
-  }
+    </div>
+  );
+}
 
   return (
 

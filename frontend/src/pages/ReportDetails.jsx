@@ -57,27 +57,22 @@ const ReportDetails = () => {
 
   };
 
-  if (loading) {
+  if (!stats) {
+  return (
+    <div className="min-h-screen bg-[#09090F] p-10">
 
-    return (
+      <div className="grid md:grid-cols-4 gap-6">
 
-      <div
-        className="
-        min-h-screen
-        bg-[#0a0a0f]
-        flex
-        justify-center
-        items-center
-        text-white
-        text-2xl
-        "
-      >
-        Loading Report...
+        <SkeletonCard />
+        <SkeletonCard />
+        <SkeletonCard />
+        <SkeletonCard />
+
       </div>
 
-    );
-
-  }
+    </div>
+  );
+}
 
   if (!report) {
 

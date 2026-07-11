@@ -27,13 +27,22 @@ const Profile = () => {
     }
   };
 
-  if (!profile) {
-    return (
-      <div className="min-h-screen bg-[#09090F] flex justify-center items-center text-white">
-        Loading Profile...
+  if (!stats) {
+  return (
+    <div className="min-h-screen bg-[#09090F] p-10">
+
+      <div className="grid md:grid-cols-4 gap-6">
+
+        <SkeletonCard />
+        <SkeletonCard />
+        <SkeletonCard />
+        <SkeletonCard />
+
       </div>
-    );
-  }
+
+    </div>
+  );
+}
 
   return (
     <div className="min-h-screen bg-[#09090F] text-white px-8 py-12">
