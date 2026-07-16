@@ -161,7 +161,9 @@ const FAQ = () => {
   const [active, setActive] = useState(null);
 
   return (
-    <section className="bg-[#09090F] py-28">
+    <section 
+     id= "faq"
+     className="bg-[#09090F] py-28">
       <div className="max-w-5xl mx-auto px-6">
 
         <div className="text-center mb-16">

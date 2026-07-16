@@ -3,14 +3,35 @@ import logo from "../assets/logo.png";
 
 const Navbar = () => {
   return (
-    <header className="sticky top-0 z-50 backdrop-blur-xl bg-[#09090F]/80 border-b border-[#222238]">
-      <div className="max-w-7xl mx-auto px-8 py-5 flex items-center justify-between">
-
+    <header
+      className="
+      fixed
+      top-0
+      left-0
+      right-0
+      z-50
+      backdrop-blur-xl
+      bg-[#09090F]/80
+      border-b
+      border-[#222236]
+      "
+    >
+      <div
+        className="
+        max-w-7xl
+        mx-auto
+        px-8
+        h-24
+        flex
+        items-center
+        justify-between
+        "
+      >
         {/* Logo */}
 
         <Link
           to="/"
-          className="flex items-center gap-3"
+          className="flex items-center gap-4"
         >
           <img
             src={logo}
@@ -62,17 +83,17 @@ const Navbar = () => {
           </a>
 
           <a
-            href="#tech"
+            href="#faq"
             className="text-gray-300 hover:text-cyan-400 transition"
           >
-            Tech Stack
+            FAQ
           </a>
 
           <a
-            href="#about"
+            href="#footer"
             className="text-gray-300 hover:text-cyan-400 transition"
           >
-            About
+            Contact
           </a>
 
         </nav>
@@ -101,10 +122,10 @@ const Navbar = () => {
             bg-gradient-to-r
             from-cyan-500
             to-purple-600
+            text-white
+            font-semibold
             hover:scale-105
             transition
-            font-semibold
-            text-white
             shadow-lg
             shadow-cyan-500/20
             "

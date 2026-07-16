@@ -17,20 +17,41 @@ const Hero = () => {
 
       <div className="absolute bottom-10 right-10 w-[500px] h-[500px] rounded-full bg-purple-600/10 blur-[180px]" />
 
-      <div className="max-w-7xl mx-auto px-8 py-24 grid lg:grid-cols-2 gap-16 items-center">
+      <div className="max-w-7xl mx-auto px-8 pt-36 pb-24 grid lg:grid-cols-2 gap-16 items-center">
 
         {/* Left */}
 
         <motion.div
-          initial={{ opacity: 0, x: -40 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.8 }}
+          initial={{
+            opacity: 0,
+            x: -40,
+          }}
+          animate={{
+            opacity: 1,
+            x: 0,
+          }}
+          transition={{
+            duration: 0.8,
+          }}
         >
-          <span className="px-5 py-2 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-sm font-semibold">
+
+          <span
+            className="
+            inline-block
+            px-5
+            py-2
+            rounded-full
+            bg-cyan-500/10
+            border
+            border-cyan-500/30
+            text-cyan-400
+            font-semibold
+            "
+          >
             AI Powered Academic Integrity Platform
           </span>
 
-          <h1 className="mt-8 text-6xl font-black leading-tight">
+          <h1 className="mt-8 text-6xl font-black leading-tight text-white">
 
             Detect
 
@@ -45,69 +66,99 @@ const Hero = () => {
 
           </h1>
 
-          <p className="mt-8 text-gray-400 text-xl leading-9 max-w-xl">
+          <p className="mt-8 text-xl text-gray-400 leading-9 max-w-xl">
 
-            ZeroTrace combines semantic AI analysis, document comparison,
-            AI-generated content detection and professional reporting
-            into one modern platform.
+            ZeroTrace combines AI-powered semantic analysis,
+            plagiarism detection,
+            PDF comparison,
+            secure report generation,
+            and intelligent document insights into one modern platform.
 
           </p>
 
-          <div className="mt-10 flex gap-5">
+          {/* Buttons */}
+
+          <div className="flex flex-wrap gap-6 mt-12">
 
             <Link
               to="/signup"
-              className="px-8 py-4 rounded-xl bg-gradient-to-r from-cyan-500 to-purple-600 font-semibold hover:scale-105 transition"
+              className="
+              px-8
+              py-4
+              rounded-xl
+              bg-gradient-to-r
+              from-cyan-500
+              to-purple-600
+              text-white
+              font-semibold
+              hover:scale-105
+              transition
+              "
             >
-              Get Started →
+              Get Started Free
             </Link>
 
-            <Link
-              to="/login"
-              className="px-8 py-4 rounded-xl border border-[#2D2D44] hover:border-cyan-400 transition"
+            <a
+              href="#features"
+              className="
+              px-8
+              py-4
+              rounded-xl
+              border
+              border-cyan-500
+              text-cyan-400
+              font-semibold
+              hover:bg-cyan-500
+              hover:text-white
+              transition
+              "
             >
-              Live Demo
-            </Link>
+              Learn More
+            </a>
 
           </div>
 
-          {/* Stats */}
+          {/* Feature Highlights */}
 
-          <div className="grid grid-cols-3 gap-8 mt-14">
+          <div className="grid grid-cols-2 gap-6 mt-14">
 
-            <div>
+            <div className="flex items-center gap-3">
 
-              <h2 className="text-4xl font-black text-cyan-400">
-                95%
-              </h2>
+              <FaRobot className="text-cyan-400 text-xl" />
 
-              <p className="text-gray-400">
-                Detection Accuracy
-              </p>
+              <span className="text-gray-300">
+                AI Detection
+              </span>
 
             </div>
 
-            <div>
+            <div className="flex items-center gap-3">
 
-              <h2 className="text-4xl font-black text-cyan-400">
-                2s
-              </h2>
+              <FaFileAlt className="text-cyan-400 text-xl" />
 
-              <p className="text-gray-400">
-                Average Scan
-              </p>
+              <span className="text-gray-300">
+                PDF Analysis
+              </span>
 
             </div>
 
-            <div>
+            <div className="flex items-center gap-3">
 
-              <h2 className="text-4xl font-black text-cyan-400">
-                24/7
-              </h2>
+              <FaShieldAlt className="text-cyan-400 text-xl" />
 
-              <p className="text-gray-400">
-                Availability
-              </p>
+              <span className="text-gray-300">
+                Secure Reports
+              </span>
+
+            </div>
+
+            <div className="flex items-center gap-3">
+
+              <FaChartLine className="text-cyan-400 text-xl" />
+
+              <span className="text-gray-300">
+                Smart Analytics
+              </span>
 
             </div>
 
@@ -118,103 +169,56 @@ const Hero = () => {
         {/* Right */}
 
         <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1 }}
-          className="relative"
+          initial={{
+            opacity: 0,
+            y: 40,
+          }}
+          animate={{
+            opacity: 1,
+            y: 0,
+          }}
+          transition={{
+            duration: 1,
+          }}
         >
 
-          <div className="bg-[#151523] rounded-3xl border border-[#2D2D44] p-8 shadow-2xl">
+          <div
+            className="
+            bg-[#151523]
+            border
+            border-[#2D2D44]
+            rounded-3xl
+            p-10
+            shadow-2xl
+            "
+          >
 
-            <div className="flex justify-between items-center">
-
-              <h2 className="text-2xl font-bold">
-                Live Analysis
-              </h2>
-
-              <span className="text-green-400">
-                ● Active
-              </span>
-
-            </div>
+            <h2 className="text-3xl font-bold text-white">
+              Live Analysis
+            </h2>
 
             <div className="mt-10 space-y-8">
 
-              <div>
+              <Progress
+                title="Similarity Score"
+                value="18%"
+                width="18%"
+                color="bg-cyan-400"
+              />
 
-                <div className="flex justify-between">
+              <Progress
+                title="AI Detection"
+                value="9%"
+                width="9%"
+                color="bg-purple-500"
+              />
 
-                  <span>Similarity</span>
-
-                  <span className="text-cyan-400">
-                    18%
-                  </span>
-
-                </div>
-
-                <div className="h-3 bg-[#26263A] rounded-full mt-2">
-
-                  <div className="w-[18%] h-3 bg-cyan-400 rounded-full" />
-
-                </div>
-
-              </div>
-
-              <div>
-
-                <div className="flex justify-between">
-
-                  <span>AI Generated</span>
-
-                  <span className="text-purple-400">
-                    9%
-                  </span>
-
-                </div>
-
-                <div className="h-3 bg-[#26263A] rounded-full mt-2">
-
-                  <div className="w-[9%] h-3 bg-purple-500 rounded-full" />
-
-                </div>
-
-              </div>
-
-              <div className="grid grid-cols-2 gap-4 mt-8">
-
-                <div className="bg-[#1F1F33] rounded-xl p-5">
-
-                  <FaFileAlt className="text-cyan-400 text-2xl mb-3" />
-
-                  PDF Upload
-
-                </div>
-
-                <div className="bg-[#1F1F33] rounded-xl p-5">
-
-                  <FaRobot className="text-purple-400 text-2xl mb-3" />
-
-                  AI Detection
-
-                </div>
-
-                <div className="bg-[#1F1F33] rounded-xl p-5">
-
-                  <FaShieldAlt className="text-green-400 text-2xl mb-3" />
-
-                  Secure Reports
-
-                </div>
-
-                <div className="bg-[#1F1F33] rounded-xl p-5">
-
-                  <FaChartLine className="text-yellow-400 text-2xl mb-3" />
-
-                  Analytics
-
-                </div>
-
-              </div>
+              <Progress
+                title="Report Accuracy"
+                value="96%"
+                width="96%"
+                color="bg-green-400"
+              />
 
             </div>
 
@@ -227,5 +231,33 @@ const Hero = () => {
     </section>
   );
 };
+
+const Progress = ({
+  title,
+  value,
+  width,
+  color,
+}) => (
+  <div>
+
+    <div className="flex justify-between text-gray-300">
+
+      <span>{title}</span>
+
+      <span>{value}</span>
+
+    </div>
+
+    <div className="h-3 rounded-full bg-[#26263A] mt-3">
+
+      <div
+        className={`${color} h-3 rounded-full`}
+        style={{ width }}
+      />
+
+    </div>
+
+  </div>
+);
 
 export default Hero;
