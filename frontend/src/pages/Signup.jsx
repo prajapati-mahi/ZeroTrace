@@ -51,6 +51,7 @@ const Signup = () => {
 
             </span>
 
+
             <h1 className="text-6xl font-black text-white leading-tight mt-8">
 
               ZeroTrace

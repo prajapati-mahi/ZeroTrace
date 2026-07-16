@@ -2,14 +2,15 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import api from "../services/api";
 
-import Navbar from "../components/Navbar";
+import DashboardNavbar from "../components/DashboardNavbar";
 import DashboardStats from "../components/DashboardStats";
 import StatsCard from "../components/StatsCard";
 import RecentReports from "../components/RecentReports";
-import LogoutButton from "../components/LogoutButton";
-import { useAuth } from "../context/AuthContext";
 import AnalyticsCharts from "../components/AnalyticsCharts";
 import SkeletonCard from "../components/SkeletonCard";
+import QuickActions from "../components/QuickActions";
+
+import { useAuth } from "../context/AuthContext";
 
 import {
   FaFileAlt,
@@ -38,228 +39,192 @@ const Dashboard = () => {
   };
 
   if (!stats) {
-  return (
-    <div className="min-h-screen bg-[#09090F] p-10">
-
-      <div className="grid md:grid-cols-4 gap-6">
-
-        <SkeletonCard />
-        <SkeletonCard />
-        <SkeletonCard />
-        <SkeletonCard />
-
+    return (
+      <div className="min-h-screen bg-[#09090F] p-10">
+        <div className="grid lg:grid-cols-4 md:grid-cols-2 gap-8">
+          <SkeletonCard />
+          <SkeletonCard />
+          <SkeletonCard />
+          <SkeletonCard />
+        </div>
       </div>
-
-    </div>
-  );
-}
+    );
+  }
 
   return (
-    <div
-      className="
-      min-h-screen
-      bg-[#0a0a0f]
-      text-white
-      px-10
-      py-6
-      relative
-      overflow-hidden
-      "
-    >
-      {/* Background Glow */}
+    <div className="min-h-screen bg-[#09090F] text-white px-10 py-8">
 
-      <div
-        className="
-        absolute
-        top-0
-        left-0
-        w-[500px]
-        h-[500px]
-        bg-[#6c63ff]
-        opacity-20
-        blur-[180px]
-        rounded-full
-        "
-      />
+      <DashboardNavbar />
 
-      <div
-        className="
-        absolute
-        bottom-0
-        right-0
-        w-[500px]
-        h-[500px]
-        bg-[#00d4ff]
-        opacity-20
-        blur-[180px]
-        rounded-full
-        "
-      />
+      {/* Hero */}
 
-      <div className="relative z-10">
+      <div className="mb-14">
 
-        <Navbar />
+        <div className="flex flex-col lg:flex-row justify-between items-center">
 
-        {/* Hero Section */}
+          <div>
 
-        <div className="mt-10 mb-12">
+            <span className="inline-block px-4 py-2 rounded-full bg-cyan-500/10 text-cyan-400 font-semibold text-sm mb-5">
 
-          <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-8">
+              Dashboard
 
-            <div>
+            </span>
 
-              <p className="text-cyan-400 font-semibold tracking-[4px] uppercase">
+            <h1 className="text-5xl font-black leading-tight">
 
-                Dashboard
+              Welcome back,
 
-              </p>
+              <span className="text-cyan-400">
 
-              <h1 className="text-5xl font-black mt-3">
+                {" "}
+                {user?.name}
 
-                Welcome back,
+              </span>
 
-                <span className="text-cyan-400">
+              👋
 
-                  {" "}
-                  {user?.name || "User"}
+            </h1>
 
-                </span>
+            <p className="text-gray-400 mt-5 text-lg max-w-xl">
 
-                👋
+              Track plagiarism reports, monitor AI detection,
+              and analyze document statistics in one place.
 
-              </h1>
-
-              <p className="text-gray-400 mt-5 text-lg">
-
-                Manage plagiarism reports, AI analysis and PDF comparisons effortlessly.
-
-              </p>
-
-            </div>
-
-            <div className="flex flex-wrap gap-4">
-
-              <Link
-                to="/checker"
-                className="
-                bg-cyan-500
-                hover:bg-cyan-600
-                px-6
-                py-3
-                rounded-xl
-                font-semibold
-                transition
-                "
-              >
-                + New Check
-              </Link>
-
-              <Link
-                to="/history"
-                className="
-                border
-                border-[#2d2d44]
-                hover:border-cyan-400
-                px-6
-                py-3
-                rounded-xl
-                transition
-                "
-              >
-                View History
-              </Link>
-
-              <LogoutButton />
-
-            </div>
+            </p>
 
           </div>
 
-        </div>
+          <div className="mt-8 lg:mt-0">
 
-        {/* Stats */}
-
-        <div className="grid md:grid-cols-2 xl:grid-cols-4 gap-6">
-
-          <StatsCard
-            title="Reports"
-            value={stats.totalReports}
-            icon={<FaFileAlt />}
-          />
-
-          <StatsCard
-            title="Average Similarity"
-            value={`${stats.averageSimilarity}%`}
-            icon={<FaRobot />}
-          />
-
-          <StatsCard
-            title="Highest Similarity"
-            value={`${stats.highestSimilarity}%`}
-            icon={<FaShieldAlt />}
-          />
-
-          <StatsCard
-            title="Average AI"
-            value={`${stats.averageAI || 0}%`}
-            icon={<FaRobot />}
-          />
-
-        </div>
-
-        {/* Analytics */}
-
-        <div className="mt-14">
-
-          <h2 className="text-3xl font-bold mb-6">
-
-            Analytics Overview
-
-          </h2>
-
-          <DashboardStats stats={stats} />
-
-        </div>
-
-        <div className="mt-12">
-
-    <AnalyticsCharts
-        stats={stats}
-    />
+  <Link
+    to="/checker"
+    className="
+      inline-flex
+      items-center
+      gap-2
+      px-8
+      py-4
+      rounded-2xl
+      bg-gradient-to-r
+      from-cyan-500
+      to-purple-600
+      font-semibold
+      text-lg
+      hover:scale-105
+      transition
+      shadow-lg
+    "
+  >
+    + New Check
+  </Link>
 
 </div>
 
-        {/* Recent Reports */}
+        </div>
 
-        <div className="mt-14">
+      </div>
 
-          <div className="flex justify-between items-center mb-6">
+      {/* Online */}
 
-            <h2 className="text-3xl font-bold">
+      <div className="flex items-center gap-3 mb-8">
 
-              Recent Activity
+        <div className="w-3 h-3 rounded-full bg-green-400 animate-pulse"></div>
 
-            </h2>
+        <span className="text-green-400 font-medium">
 
-            <Link
-              to="/history"
-              className="
-              bg-cyan-500
-              hover:bg-cyan-600
-              px-5
-              py-2
-              rounded-lg
-              transition
-              "
-            >
-              View All
-            </Link>
+          System Online
 
-          </div>
+        </span>
 
-          <RecentReports />
+      </div>
+
+      {/* Stats */}
+
+      <div className="grid lg:grid-cols-4 md:grid-cols-2 gap-8">
+
+        <StatsCard
+          title="Reports"
+          value={stats.totalReports}
+          icon={<FaFileAlt />}
+        />
+
+        <StatsCard
+          title="Average Similarity"
+          value={`${stats.averageSimilarity}%`}
+          icon={<FaRobot />}
+        />
+
+        <StatsCard
+          title="Highest Similarity"
+          value={`${stats.highestSimilarity}%`}
+          icon={<FaShieldAlt />}
+        />
+
+        <StatsCard
+          title="Average AI"
+          value={`${stats.averageAI}%`}
+          icon={<FaRobot />}
+        />
+
+      </div>
+
+      {/* Analytics */}
+
+      <div className="mt-16">
+
+        <h2 className="text-3xl font-bold mb-8">
+
+          Analytics Overview
+
+        </h2>
+
+        <DashboardStats stats={stats} />
+
+      </div>
+
+      <div className="grid lg:grid-cols-3 gap-8 mt-16">
+
+  <div className="lg:col-span-2">
+
+    <AnalyticsCharts
+      stats={stats}
+    />
+
+  </div>
+
+  <QuickActions />
+
+</div>
+
+      {/* Recent */}
+
+      <div className="mt-20">
+
+        <div className="flex justify-between items-center mb-8">
+
+          <h2 className="text-3xl font-bold">
+
+            Recent Activity
+
+          </h2>
+
+          <Link
+            to="/history"
+            className="
+            px-6
+            py-3
+            rounded-xl
+            bg-cyan-500
+            hover:bg-cyan-600
+            transition
+            "
+          >
+            View All
+          </Link>
 
         </div>
+
+        <RecentReports />
 
       </div>
 

@@ -25,7 +25,10 @@ const authMiddleware = async (
     const token =
       authHeader.split(" ")[1];
 
+
+    console.log("Received Header:", authHeader);
     const decoded =
+    
       jwt.verify(
         token,
         process.env.JWT_SECRET
