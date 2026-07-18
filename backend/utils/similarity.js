@@ -1,29 +1,89 @@
-const natural = require("natural");
-const { removeStopwords } = require("stopword");
+/**
+ * Jaccard Similarity
+ */
 
-const tokenizer = new natural.WordTokenizer();
+const jaccardSimilarity = (a, b) => {
 
-const calculateSimilarity = (text1, text2) => {
-  const tokens1 = removeStopwords(
-    tokenizer.tokenize(text1.toLowerCase())
+  const setA = new Set(
+    a.toLowerCase().split(/\s+/)
   );
 
-  const tokens2 = removeStopwords(
-    tokenizer.tokenize(text2.toLowerCase())
+  const setB = new Set(
+    b.toLowerCase().split(/\s+/)
   );
 
-  const set1 = new Set(tokens1);
-  const set2 = new Set(tokens2);
+  const intersection =
+    [...setA].filter((word) =>
+      setB.has(word)
+    );
 
-  const intersection = [...set1].filter(word =>
-    set2.has(word)
-  );
+  const union =
+    new Set([...setA, ...setB]);
 
-  const union = new Set([...set1, ...set2]);
-
-  return Math.round(
-    (intersection.length / union.size) * 100
+  return (
+    (intersection.length /
+      union.size) *
+    100
   );
 };
 
-module.exports = calculateSimilarity;
+/**
+ * Dice Coefficient
+ */
+
+const diceCoefficient = (a, b) => {
+
+  const wordsA =
+    a.toLowerCase().split(/\s+/);
+
+  const wordsB =
+    b.toLowerCase().split(/\s+/);
+
+  let common = 0;
+
+  wordsA.forEach((word) => {
+
+    if (wordsB.includes(word)) {
+
+      common++;
+
+    }
+
+  });
+
+  return (
+    (2 * common /
+      (wordsA.length +
+        wordsB.length)) *
+    100
+  );
+};
+
+/**
+ * Final Similarity Score
+ */
+
+const calculateSimilarity = (
+  sentenceA,
+  sentenceB
+) => {
+
+  const jaccard =
+    jaccardSimilarity(
+      sentenceA,
+      sentenceB
+    );
+
+  const dice =
+    diceCoefficient(
+      sentenceA,
+      sentenceB
+    );
+
+  return (
+    (jaccard + dice) / 2
+  );
+};
+
+module.exports =
+  calculateSimilarity;

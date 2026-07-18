@@ -1,227 +1,367 @@
-const searchWeb = require(
-  "../services/searchService"
-);
+const searchWeb = require("../services/searchService");
+const scrapeWebsite = require("../services/scraperService");
 
 const Report = require("../models/Report");
 
-const scrapeWebsite = require(
-  "../services/scraperService"
-);
+const calculateSimilarity = require("../utils/similarity");
+const detectAIContent = require("../utils/aiDetector");
 
-const calculateSimilarity = require(
-  "../utils/similarity"
-);
+const generateQueries = require("../utils/queryGenerator");
 
-const detectAIContent = require(
-  "../utils/aiDetector"
-);
+const {
+    extractSentences,
+} = require("../utils/sentenceUtils");
 
-console.log(
-  "AI Detector:",
-  detectAIContent
-);
+const checkTextPlagiarism = async (req, res) => {
 
-const checkTextPlagiarism = async (
-  req,
-  res
-) => {
-  try {
+    try {
 
-    const { text } = req.body;
-    const aiResult = detectAIContent(text);
+        const { text } = req.body;
 
-    if (!text) {
-      return res.status(400).json({
-        message: "Text is required",
-      });
-    }
+        if (!text || text.trim().length === 0) {
 
-    const searchResults =
-      await searchWeb(
-        text.slice(0, 150)
-      );
-
-    console.log(
-      "Search Results:",
-      searchResults
-    );
-
-    let highestScore = 0;
-
-    const matchedSources = [];
-
-    const matchedSentences = [];
-
-    const inputSentences =
-      text.split(/[.!?]/);
-
-    for (const result of searchResults) {
-
-      const websiteText =
-        await scrapeWebsite(
-          result.link
-        );
-
-      if (!websiteText)
-        continue;
-
-      const websiteSentences =
-        websiteText.split(/[.!?]/);
-
-      let bestMatch = 0;
-
-      for (const websiteSentence of websiteSentences) {
-
-        const cleanWebsiteSentence =
-          websiteSentence.trim();
-
-        if (
-          cleanWebsiteSentence.length < 20
-        ) {
-          continue;
-        }
-
-        const currentScore =
-          calculateSimilarity(
-            text,
-            cleanWebsiteSentence
-          );
-
-        if (
-          currentScore >
-          bestMatch
-        ) {
-          bestMatch =
-            currentScore;
-        }
-
-      }
-
-      const score = bestMatch;
-
-      if (
-        score > highestScore
-      ) {
-        highestScore =
-          score;
-      }
-
-      if (score >= 25) {
-
-        matchedSources.push({
-          title:
-            result.title,
-          link:
-            result.link,
-          score,
-        });
-
-      }
-
-      // Sentence Level Matching
-
-      for (const inputSentence of inputSentences) {
-
-        const cleanInputSentence =
-          inputSentence.trim();
-
-        if (
-          cleanInputSentence.length < 20
-        ) {
-          continue;
-        }
-
-        for (const websiteSentence of websiteSentences) {
-
-          const cleanWebsiteSentence =
-            websiteSentence.trim();
-
-          if (
-            cleanWebsiteSentence.length < 20
-          ) {
-            continue;
-          }
-
-          const sentenceScore =
-            calculateSimilarity(
-              cleanInputSentence,
-              cleanWebsiteSentence
-            );
-
-          if (
-            sentenceScore >= 30
-          ) {
-
-            matchedSentences.push({
-              sentence:
-                cleanInputSentence,
-              source:
-                result.link,
-              score:
-                sentenceScore,
+            return res.status(400).json({
+                message: "Text is required",
             });
 
-          }
+        }
+
+        const aiResult =
+            detectAIContent(text);
+
+        /*
+        ---------------------------------
+        Generate Multiple Search Queries
+        ---------------------------------
+        */
+
+        const queries =
+            generateQueries(text);
+
+        let allSearchResults = [];
+
+        for (const query of queries) {
+
+            try {
+
+                const results =
+                    await searchWeb(query);
+
+                allSearchResults.push(...results);
+
+            }
+
+            catch (err) {
+
+                console.log(
+                    "Search Error:",
+                    err.message
+                );
+
+            }
 
         }
 
-      }
+        /*
+        ---------------------------------
+        Remove Duplicate URLs
+        ---------------------------------
+        */
+
+        const uniqueResults = [
+
+            ...new Map(
+
+                allSearchResults.map(
+                    item => [
+
+                        item.link,
+
+                        item
+
+                    ]
+                )
+
+            ).values()
+
+        ];
+
+        console.log(
+            "Unique Search Results:",
+            uniqueResults.length
+        );
+
+        /*
+        ---------------------------------
+        Prepare User Sentences
+        ---------------------------------
+        */
+
+        const inputSentences =
+            extractSentences(text);
+
+        const matchedSentences = [];
+
+        const sourceMap = {};
+
+        let copiedSentenceCount = 0;
+
+                /*
+        ---------------------------------
+        Compare Against Every Website
+        ---------------------------------
+        */
+
+        for (const result of uniqueResults) {
+
+            if (!result.link) continue;
+
+            console.log("Scanning:", result.link);
+
+            const websiteText =
+                await scrapeWebsite(result.link);
+
+            if (!websiteText) continue;
+
+            const websiteSentences =
+                extractSentences(websiteText);
+
+            let sourceMatchedCount = 0;
+
+            /*
+            ---------------------------------
+            Compare Sentence ↔ Sentence
+            ---------------------------------
+            */
+
+            for (const inputSentence of inputSentences) {
+
+                let bestScore = 0;
+
+                for (const websiteSentence of websiteSentences) {
+
+                    const score =
+                        calculateSimilarity(
+                            inputSentence,
+                            websiteSentence
+                        );
+
+                    if (score > bestScore) {
+                        bestScore = score;
+                    }
+
+                }
+
+                /*
+                ---------------------------------
+                Sentence Considered Copied
+                ---------------------------------
+                */
+
+                if (bestScore >= 75) {
+
+                    copiedSentenceCount++;
+
+                    sourceMatchedCount++;
+
+                    matchedSentences.push({
+
+                        sentence: inputSentence,
+
+                        source: result.link,
+
+                        score: Math.round(bestScore)
+
+                    });
+
+                }
+
+            }
+
+            /*
+            ---------------------------------
+            Store Source Contribution
+            ---------------------------------
+            */
+
+            if (sourceMatchedCount > 0) {
+
+                sourceMap[result.link] = {
+
+                    title:
+                        result.title || result.link,
+
+                    link:
+                        result.link,
+
+                    score:
+                        Math.round(
+                            sourceMatchedCount /
+                            inputSentences.length *
+                            100
+                        ),
+
+                    matched:
+                        sourceMatchedCount
+
+                };
+
+            }
+
+        }
+
+        /*
+        ---------------------------------
+        Remove Duplicate Sentences
+        ---------------------------------
+        */
+
+        const uniqueMatchedSentences = [
+
+            ...new Map(
+
+                matchedSentences.map(
+                    item => [
+
+                        item.sentence,
+
+                        item
+
+                    ]
+                )
+
+            ).values()
+
+        ];
+
+        /*
+        ---------------------------------
+        Prepare Sources
+        ---------------------------------
+        */
+
+        const matchedSources =
+            Object.values(sourceMap)
+            .sort(
+                (a, b) =>
+                    b.matched -
+                    a.matched
+            );
+
+        /*
+        ---------------------------------
+        Calculate Final Plagiarism %
+        ---------------------------------
+        */
+
+        const plagiarismScore =
+
+            inputSentences.length === 0
+
+            ? 0
+
+            : Math.round(
+
+                uniqueMatchedSentences.length
+
+                /
+
+                inputSentences.length
+
+                *
+
+                100
+
+            );
+
+        console.log(
+            "Copied Sentences:",
+            uniqueMatchedSentences.length
+        );
+
+        console.log(
+            "Plagiarism:",
+            plagiarismScore + "%"
+        );
+
+                /*
+        ---------------------------------
+        Save Report
+        ---------------------------------
+        */
+
+        const report = await Report.create({
+
+            user: req.user.id,
+
+            title:
+
+                text.length > 40
+
+                    ? text.substring(0, 40) + "..."
+
+                    : text,
+
+            text,
+
+            plagiarismScore,
+
+            aiScore: aiResult.aiScore,
+
+            risk: aiResult.aiRisk,
+
+            matches: matchedSources.map(source => ({
+
+                title: source.title,
+
+                link: source.link,
+
+                score: source.score
+
+            }))
+
+        });
+
+        /*
+        ---------------------------------
+        Return Response
+        ---------------------------------
+        */
+
+        return res.status(200).json({
+
+            plagiarismScore,
+
+            aiScore: aiResult.aiScore,
+
+            aiRisk: aiResult.aiRisk,
+
+            sources: matchedSources,
+
+            matchedSentences: uniqueMatchedSentences,
+
+            reportId: report._id
+
+        });
 
     }
 
-    const report = await Report.create({
-  user: req.user.id,
+    catch (error) {
 
-  title:
-    text.length > 40
-      ? text.substring(0, 40) + "..."
-      : text,
+        console.error("Plagiarism Error:", error);
 
-  text,
+        return res.status(500).json({
 
-  plagiarismScore:
-    highestScore,
+            message: "Internal Server Error",
 
-  aiScore:
-    aiResult.aiScore,
+            error: error.message
 
-  risk:
-    aiResult.aiRisk,
+        });
 
-  matches:
-    matchedSources,
-});
+    }
 
-res.status(200).json({
-  plagiarismScore:
-    highestScore,
-
-  aiScore:
-    aiResult.aiScore,
-
-  aiRisk:
-    aiResult.aiRisk,
-
-  sources:
-    matchedSources,
-
-  matchedSentences,
-
-  reportId:
-    report._id,
-});
-  } catch (error) {
-
-    console.error(error);
-
-    res.status(500).json({
-      message:
-        error.message,
-    });
-
-  }
 };
 
 module.exports = {
-  checkTextPlagiarism,
+    checkTextPlagiarism
 };
