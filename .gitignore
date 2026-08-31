@@ -1,4 +1,14 @@
-node_modules
+﻿node_modules/
 .env
-dist
-.vscode
+backend/.env
+dist/
+.vscode/
+uploads/
+backend/uploads/
+*.log
+venv/
+ai-engine/venv/
+__pycache__/
+*.pyc
+*.dll
+*.exe

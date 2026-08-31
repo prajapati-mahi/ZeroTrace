@@ -1,12 +1,17 @@
 const Interpretation = ({ report }) => {
 
   let title = "";
-  let message = "";
   let color = "";
+  let message = "";
+  let recommendation = "";
+
+  // =============================
+  // CASE 1
+  // =============================
 
   if (
-    report.plagiarismScore < 20 &&
-    report.aiScore < 20
+    report.plagiarismScore <= 15 &&
+    report.aiScore <= 15
   ) {
 
     title = "Excellent Originality";
@@ -14,12 +19,39 @@ const Interpretation = ({ report }) => {
     color = "text-green-400";
 
     message =
-      "This document appears to be highly original with very little similarity to existing online sources. The AI-generated content percentage is also minimal, indicating that the content is primarily human-written.";
+      "The submitted document appears to be highly original. Both plagiarism and AI-generated content percentages are very low, indicating authentic human-written content.";
+
+    recommendation =
+      "No significant concerns detected. The document is suitable for academic or professional submission.";
 
   }
 
+  // =============================
+  // CASE 2
+  // =============================
+
   else if (
-    report.plagiarismScore < 50
+    report.plagiarismScore <= 35
+  ) {
+
+    title = "Mostly Original";
+
+    color = "text-lime-400";
+
+    message =
+      "A small amount of similarity was detected. This usually happens because of commonly used phrases, references or properly cited material.";
+
+    recommendation =
+      "Perform one final review to ensure all references are correctly cited.";
+
+  }
+
+  // =============================
+  // CASE 3
+  // =============================
+
+  else if (
+    report.plagiarismScore <= 60
   ) {
 
     title = "Moderate Similarity";
@@ -27,9 +59,16 @@ const Interpretation = ({ report }) => {
     color = "text-yellow-400";
 
     message =
-      "The document contains a moderate amount of similarity with publicly available sources. Although this may include common phrases or properly cited references, a manual review is recommended to ensure originality.";
+      "The document contains noticeable overlap with online content. Although this does not always indicate plagiarism, portions of the document should be reviewed carefully.";
+
+    recommendation =
+      "Consider paraphrasing highly similar sections before submission.";
 
   }
+
+  // =============================
+  // CASE 4
+  // =============================
 
   else {
 
@@ -38,7 +77,10 @@ const Interpretation = ({ report }) => {
     color = "text-red-400";
 
     message =
-      "The document contains a high level of similarity with online sources. While the AI-generated content percentage remains relatively low, the plagiarism score indicates substantial overlap. Reviewing the highlighted sources before submission is strongly recommended.";
+      "A significant percentage of the document matches existing online sources. While the AI score remains acceptable, the similarity level suggests that originality may be compromised.";
+
+    recommendation =
+      "Rewrite or paraphrase the highlighted sections and verify all citations before submitting the document.";
 
   }
 
@@ -60,7 +102,7 @@ const Interpretation = ({ report }) => {
         text-3xl
         font-bold
         text-cyan-400
-        mb-6
+        mb-8
         "
       >
         AI Interpretation
@@ -68,9 +110,9 @@ const Interpretation = ({ report }) => {
 
       <h3
         className={`
-        text-2xl
+        text-3xl
         font-bold
-        mb-4
+        mb-6
         ${color}
         `}
       >
@@ -86,6 +128,39 @@ const Interpretation = ({ report }) => {
       >
         {message}
       </p>
+
+      <div
+        className="
+        mt-8
+        rounded-2xl
+        bg-[#0f172a]
+        border
+        border-cyan-500/20
+        p-6
+        "
+      >
+
+        <h4
+          className="
+          text-cyan-400
+          font-bold
+          text-xl
+          mb-3
+          "
+        >
+          Recommendation
+        </h4>
+
+        <p
+          className="
+          text-[#cfcfcf]
+          leading-7
+          "
+        >
+          {recommendation}
+        </p>
+
+      </div>
 
     </div>
 

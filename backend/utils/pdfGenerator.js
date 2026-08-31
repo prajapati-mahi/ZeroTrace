@@ -1,207 +1,106 @@
-const PDFDocument = require("pdfkit");
+﻿const PDFDocument = require("pdfkit");
 
 const generatePDF = (report, res) => {
   const doc = new PDFDocument({
     margin: 50,
   });
 
-  res.setHeader(
-    "Content-Type",
-    "application/pdf"
-  );
-
-  res.setHeader(
-    "Content-Disposition",
-    `attachment; filename=ZeroTrace_Report.pdf`
-  );
+  res.setHeader("Content-Type", "application/pdf");
+  res.setHeader("Content-Disposition", `attachment; filename=ZeroTrace_Report.pdf`);
 
   doc.pipe(res);
 
-  // ===========================
   // HEADER
-  // ===========================
+  doc.fontSize(28).fillColor("#2563eb").text("ZeroTrace", { align: "center" });
+  doc.moveDown(0.3).fillColor("#111827").fontSize(18).text("Plagiarism & Content Authenticity Report", { align: "center" });
+  doc.moveDown(1.5);
 
-  doc
-    .fontSize(28)
-    .fillColor("#2563eb")
-    .text("ZeroTrace", {
-      align: "center",
-    });
+  // REPORT SUMMARY TABLE / INFO
+  doc.fontSize(16).fillColor("#111827").text("Report Information");
+  doc.moveDown(0.5);
 
-  doc
-    .moveDown(0.3)
-    .fillColor("black")
-    .fontSize(18)
-    .text("AI Plagiarism Analysis Report", {
-      align: "center",
-    });
+  doc.fontSize(11).fillColor("#4b5563");
+  doc.text(`Report ID: ${report._id || "N/A"}`);
+  doc.text(`Generated: ${new Date(report.createdAt || Date.now()).toLocaleString()}`);
+  doc.text(`Title / Subject: ${report.title || "Plagiarism Scan"}`);
+  doc.text(`Risk Assessment: ${report.risk || "LOW"}`);
+  doc.moveDown(1.5);
 
-  doc.moveDown(2);
-
-  // ===========================
-  // REPORT INFO
-  // ===========================
-
-  doc
-    .fontSize(20)
-    .fillColor("#111827")
-    .text("Report Information");
-
-  doc.moveDown();
-
-  doc.fontSize(13);
-
-  doc.text(
-    `Report ID : ${report._id}`
-  );
-
-  doc.text(
-    `Generated : ${new Date(
-      report.createdAt
-    ).toLocaleString()}`
-  );
-
-  doc.text(
-    `Risk Level : ${report.risk}`
-  );
-
-  doc.moveDown(2);
-
-  // ===========================
   // SCORES
-  // ===========================
+  doc.fontSize(16).fillColor("#111827").text("Plagiarism & Similarity Analysis");
+  doc.moveDown(0.5);
 
-  doc
-    .fontSize(20)
-    .text("Analysis Scores");
+  doc.fontSize(12).fillColor("#dc2626").text(`Overall Similarity Score: ${report.plagiarismScore || 0}%`);
+  doc.fontSize(11).fillColor("#4b5563");
+  if (report.analysis) {
+    doc.text(`  • Exact Match Coverage: ${report.analysis.exactMatch || 0}%`);
+    doc.text(`  • Near-Exact / Paraphrase: ${report.analysis.nearExactMatch || 0}%`);
+    doc.text(`  • Semantic Similarity: ${report.analysis.semanticSimilarity || 0}%`);
+  }
+  doc.text(`AI-Generated Probability: ${report.aiScore || 0}% (Measured independently)`);
+  doc.moveDown(1.5);
 
-  doc.moveDown();
+  // DOCUMENT STATS
+  if (report.stats) {
+    doc.fontSize(16).fillColor("#111827").text("Document Statistics");
+    doc.moveDown(0.5);
+    doc.fontSize(11).fillColor("#4b5563");
+    doc.text(`Total Words: ${report.stats.inputWords || 0}`);
+    doc.text(`Matched Words: ${report.stats.matchedWords || 0}`);
+    doc.text(`Total Sentences: ${report.stats.totalSentences || 0}`);
+    doc.text(`Matched Passages: ${report.stats.matchedSentencesCount || 0}`);
+    doc.moveDown(1.5);
+  }
 
-  doc
-    .fontSize(14)
-    .text(
-      `Plagiarism Score : ${report.plagiarismScore}%`
-    );
-
-  doc.text(
-    `AI Score : ${report.aiScore}%`
-  );
-
-  doc.moveDown(2);
-
-  // ===========================
-  // ORIGINAL TEXT
-  // ===========================
-
-  doc
-    .fontSize(20)
-    .text("Original Text");
-
-  doc.moveDown();
-
-  doc
-    .fontSize(12)
-    .text(report.text);
-
-  doc.moveDown(2);
-
-  // ===========================
   // MATCHED SOURCES
-  // ===========================
+  doc.fontSize(16).fillColor("#111827").text("Identified Sources");
+  doc.moveDown(0.5);
 
-  doc
-    .fontSize(20)
-    .text("Matched Sources");
-
-  doc.moveDown();
-
-  if (
-    report.matches.length === 0
-  ) {
-    doc.text(
-      "No matched sources found."
-    );
+  if (!report.matches || report.matches.length === 0) {
+    doc.fontSize(11).fillColor("#6b7280").text("No significant overlapping sources found.");
   } else {
-
-    report.matches.forEach(
-      (source, index) => {
-
-        doc
-          .fontSize(13)
-          .fillColor("#2563eb")
-          .text(
-            `${index + 1}. ${source.title}`
-          );
-
-        doc
-          .fillColor("black")
-          .fontSize(11)
-          .text(source.link);
-
-        doc.text(
-          `Similarity : ${source.score}%`
-        );
-
-        doc.moveDown();
-
-      }
-    );
-
+    report.matches.forEach((source, index) => {
+      doc.fontSize(12).fillColor("#2563eb").text(`${index + 1}. ${source.title || "External Source"}`);
+      doc.fontSize(10).fillColor("#4b5563").text(`URL: ${source.link}`);
+      doc.text(`Similarity: ${source.score}% | Confidence: ${source.confidence || "HIGH"}`);
+      doc.moveDown(0.5);
+    });
   }
 
-  // ===========================
+  // MATCHED PASSAGES HIGHLIGHTS
+  if (report.matchedSentences && report.matchedSentences.length > 0) {
+    doc.addPage();
+    doc.fontSize(18).fillColor("#111827").text("Matched Passages & Evidence");
+    doc.moveDown(1);
+
+    report.matchedSentences.slice(0, 15).forEach((item, index) => {
+      doc.fontSize(11).fillColor("#dc2626").text(`Passage ${index + 1} (${item.matchType || "Matched"} - ${item.score}% Similarity):`);
+      doc.fontSize(10).fillColor("#1f2937").text(`"${item.sentence}"`);
+      if (item.matchedPassage && item.matchedPassage !== item.sentence) {
+        doc.fontSize(9).fillColor("#4b5563").text(`Source Passage: "${item.matchedPassage}"`);
+      }
+      doc.fontSize(9).fillColor("#2563eb").text(`Source: ${item.sourceTitle || item.source}`);
+      doc.moveDown(0.8);
+    });
+  }
+
   // INTERPRETATION
-  // ===========================
-
   doc.addPage();
+  doc.fontSize(18).fillColor("#111827").text("Interpretation & Guidance");
+  doc.moveDown(0.8);
 
-  doc
-    .fontSize(22)
-    .text("Interpretation");
-
-  doc.moveDown();
-
-  doc.fontSize(14);
-
-  if (
-    report.plagiarismScore < 20
-  ) {
-
-    doc.text(
-      "This document appears highly original with minimal similarity."
-    );
-
-  } else if (
-    report.plagiarismScore < 50
-  ) {
-
-    doc.text(
-      "This document has moderate similarity. Manual review is recommended."
-    );
-
+  doc.fontSize(11).fillColor("#374151");
+  const score = report.plagiarismScore || 0;
+  if (score < 20) {
+    doc.text("The submitted document displays high originality with minimal or incidental overlap. Suitable for academic and professional submission.");
+  } else if (score < 50) {
+    doc.text("Moderate overlap detected. Several phrases or passages match indexed sources. Manual review and proper citation verification are recommended.");
   } else {
-
-    doc.text(
-      "High similarity detected. This document should be reviewed carefully before submission."
-    );
-
+    doc.text("High similarity detected. Significant portions of the document closely mirror indexed sources. Paraphrasing and structural revision are strongly advised.");
   }
 
-  doc.moveDown(2);
-
-  // ===========================
-  // FOOTER
-  // ===========================
-
-  doc
-    .fontSize(12)
-    .fillColor("gray")
-    .text(
-      "Generated using ZeroTrace AI",
-      {
-        align: "center",
-      }
-    );
+  doc.moveDown(3);
+  doc.fontSize(10).fillColor("#9ca3af").text("Generated by ZeroTrace AI Plagiarism Detection Engine", { align: "center" });
 
   doc.end();
 };

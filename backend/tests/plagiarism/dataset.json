@@ -1,0 +1,632 @@
+[
+  {
+    "id": "EXACT_01",
+    "category": "Exact Copy",
+    "name": "LeetCode Two Sum",
+    "original": "Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target. You may assume that each input would have exactly one solution, and you may not use the same element twice.",
+    "input": "Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target. You may assume that each input would have exactly one solution, and you may not use the same element twice.",
+    "expectedMin": 90,
+    "expectedMax": 100
+  },
+  {
+    "id": "EXACT_02",
+    "category": "Exact Copy",
+    "name": "Binary Search Definition",
+    "original": "Binary search is an efficient algorithm for finding an item from a sorted list of items. It works by repeatedly dividing in half the portion of the list that could contain the item, until you have narrowed down the possible locations to just one.",
+    "input": "Binary search is an efficient algorithm for finding an item from a sorted list of items. It works by repeatedly dividing in half the portion of the list that could contain the item, until you have narrowed down the possible locations to just one.",
+    "expectedMin": 90,
+    "expectedMax": 100
+  },
+  {
+    "id": "EXACT_03",
+    "category": "Exact Copy",
+    "name": "LeetCode Valid Parentheses",
+    "original": "Given a string s containing just the characters '(', ')', '{', '}', '[' and ']', determine if the input string is valid. An input string is valid if open brackets must be closed by the same type of brackets and open brackets must be closed in the correct order.",
+    "input": "Given a string s containing just the characters '(', ')', '{', '}', '[' and ']', determine if the input string is valid. An input string is valid if open brackets must be closed by the same type of brackets and open brackets must be closed in the correct order.",
+    "expectedMin": 90,
+    "expectedMax": 100
+  },
+  {
+    "id": "EXACT_04",
+    "category": "Exact Copy",
+    "name": "Merge Sort Explanation",
+    "original": "Merge sort is a divide-and-conquer algorithm based on the idea of breaking down a list into several sub-lists until each sub-list consists of a single element and merging those sublists in a manner that results in a sorted list.",
+    "input": "Merge sort is a divide-and-conquer algorithm based on the idea of breaking down a list into several sub-lists until each sub-list consists of a single element and merging those sublists in a manner that results in a sorted list.",
+    "expectedMin": 90,
+    "expectedMax": 100
+  },
+  {
+    "id": "EXACT_05",
+    "category": "Exact Copy",
+    "name": "LeetCode Maximum Subarray",
+    "original": "Given an integer array nums, find the subarray with the largest sum, and return its sum.",
+    "input": "Given an integer array nums, find the subarray with the largest sum, and return its sum.",
+    "expectedMin": 90,
+    "expectedMax": 100
+  },
+  {
+    "id": "EXACT_06",
+    "category": "Exact Copy",
+    "name": "Dijkstra Algorithm Description",
+    "original": "Dijkstra's algorithm finds the shortest path from a starting node to all other nodes in a weighted graph with non-negative edge weights using a priority queue.",
+    "input": "Dijkstra's algorithm finds the shortest path from a starting node to all other nodes in a weighted graph with non-negative edge weights using a priority queue.",
+    "expectedMin": 90,
+    "expectedMax": 100
+  },
+  {
+    "id": "EXACT_07",
+    "category": "Exact Copy",
+    "name": "Quicksort Pivot Principle",
+    "original": "Quicksort works by selecting a pivot element from the array and partitioning the other elements into two sub-arrays according to whether they are less than or greater than the pivot.",
+    "input": "Quicksort works by selecting a pivot element from the array and partitioning the other elements into two sub-arrays according to whether they are less than or greater than the pivot.",
+    "expectedMin": 90,
+    "expectedMax": 100
+  },
+  {
+    "id": "EXACT_08",
+    "category": "Exact Copy",
+    "name": "LeetCode Reverse Linked List",
+    "original": "Given the head of a singly linked list, reverse the list, and return the reversed list.",
+    "input": "Given the head of a singly linked list, reverse the list, and return the reversed list.",
+    "expectedMin": 90,
+    "expectedMax": 100
+  },
+  {
+    "id": "EXACT_09",
+    "category": "Exact Copy",
+    "name": "HTTP Protocol Overview",
+    "original": "The Hypertext Transfer Protocol is an application layer protocol designed to transfer information between networked devices and runs on top of other layers of the network protocol stack.",
+    "input": "The Hypertext Transfer Protocol is an application layer protocol designed to transfer information between networked devices and runs on top of other layers of the network protocol stack.",
+    "expectedMin": 90,
+    "expectedMax": 100
+  },
+  {
+    "id": "EXACT_10",
+    "category": "Exact Copy",
+    "name": "LeetCode Best Time to Buy Stock",
+    "original": "You are given an array prices where prices[i] is the price of a given stock on the ith day. You want to maximize your profit by choosing a single day to buy one stock and choosing a different day in the future to sell that stock.",
+    "input": "You are given an array prices where prices[i] is the price of a given stock on the ith day. You want to maximize your profit by choosing a single day to buy one stock and choosing a different day in the future to sell that stock.",
+    "expectedMin": 90,
+    "expectedMax": 100
+  },
+  {
+    "id": "FORMAT_01",
+    "category": "Formatting Variations",
+    "name": "Two Sum ALL CAPS",
+    "original": "Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.",
+    "input": "GIVEN AN ARRAY OF INTEGERS NUMS AND AN INTEGER TARGET, RETURN INDICES OF THE TWO NUMBERS SUCH THAT THEY ADD UP TO TARGET.",
+    "expectedMin": 85,
+    "expectedMax": 100
+  },
+  {
+    "id": "FORMAT_02",
+    "category": "Formatting Variations",
+    "name": "Punctuation Stripped",
+    "original": "Given an array of integers nums, return the indices.",
+    "input": "Given an array of integers nums return the indices",
+    "expectedMin": 85,
+    "expectedMax": 100
+  },
+  {
+    "id": "FORMAT_03",
+    "category": "Formatting Variations",
+    "name": "Extra Newlines and Tabs",
+    "original": "Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.",
+    "input": "Given an array\n\tof integers nums\n\nand an integer target,\n\t\treturn indices of the two numbers   such that they add up to target.",
+    "expectedMin": 85,
+    "expectedMax": 100
+  },
+  {
+    "id": "FORMAT_04",
+    "category": "Formatting Variations",
+    "name": "Mixed Casing and Spaces",
+    "original": "Binary search repeatedly divides a sorted search space in half.",
+    "input": "bInArY   sEaRcH   rEpEaTeDlY   dIvIdEs   a   sOrTeD   sEaRcH   sPaCe   iN   hAlF.",
+    "expectedMin": 85,
+    "expectedMax": 100
+  },
+  {
+    "id": "FORMAT_05",
+    "category": "Formatting Variations",
+    "name": "Curly Quotes to Straight Quotes",
+    "original": "Determine if the input string is “valid” according to the ‘rules’ of the grammar.",
+    "input": "Determine if the input string is \"valid\" according to the 'rules' of the grammar.",
+    "expectedMin": 85,
+    "expectedMax": 100
+  },
+  {
+    "id": "FORMAT_06",
+    "category": "Formatting Variations",
+    "name": "Multiple Whitespace Gaps",
+    "original": "Quicksort is a comparison sort algorithm that uses a divide and conquer strategy.",
+    "input": "Quicksort      is   a    comparison   sort      algorithm   that   uses   a   divide   and   conquer   strategy.",
+    "expectedMin": 85,
+    "expectedMax": 100
+  },
+  {
+    "id": "FORMAT_07",
+    "category": "Formatting Variations",
+    "name": "HTML Entities Embedded",
+    "original": "Given an array where nums[i] >= 0 & nums[i] < target.",
+    "input": "Given an array where nums[i] &gt;= 0 &amp; nums[i] &lt; target.",
+    "expectedMin": 85,
+    "expectedMax": 100
+  },
+  {
+    "id": "FORMAT_08",
+    "category": "Formatting Variations",
+    "name": "Unicode Em-Dash and Non-breaking Spaces",
+    "original": "Dynamic programming—an algorithmic optimization technique—solves subproblems once.",
+    "input": "Dynamic programming - an algorithmic optimization technique - solves subproblems once.",
+    "expectedMin": 85,
+    "expectedMax": 100
+  },
+  {
+    "id": "FORMAT_09",
+    "category": "Formatting Variations",
+    "name": "Trailing Semicolons and Colons",
+    "original": "Input: nums = [2,7,11,15], target = 9. Output: [0,1].",
+    "input": "Input nums = [2,7,11,15] target = 9; Output [0,1];",
+    "expectedMin": 80,
+    "expectedMax": 100
+  },
+  {
+    "id": "FORMAT_10",
+    "category": "Formatting Variations",
+    "name": "Random Capitalization",
+    "original": "Given a string s, find the length of the longest substring without repeating characters.",
+    "input": "gIvEn A sTrInG s, FiNd ThE lEnGtH oF tHe LoNgEsT sUbStRiNg WiThOuT rEpEaTiNg ChArAcTeRs.",
+    "expectedMin": 85,
+    "expectedMax": 100
+  },
+  {
+    "id": "MOD_01",
+    "category": "Minor Modification",
+    "name": "Two Sum Minor Edit",
+    "original": "Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.",
+    "input": "Given an integer array nums and an integer target, return the indices of two numbers that add up to target.",
+    "expectedMin": 75,
+    "expectedMax": 98
+  },
+  {
+    "id": "MOD_02",
+    "category": "Minor Modification",
+    "name": "Binary Search Minor Edit",
+    "original": "Binary search repeatedly divides a sorted search space in half until finding the element.",
+    "input": "Binary search continuously cuts a sorted search space in half until finding the target element.",
+    "expectedMin": 75,
+    "expectedMax": 98
+  },
+  {
+    "id": "MOD_03",
+    "category": "Minor Modification",
+    "name": "Linked List Reversal Minor Edit",
+    "original": "Given the head of a singly linked list, reverse the list, and return the reversed list.",
+    "input": "Given the head pointer of a singly linked list, reverse all nodes, and return the newly reversed list.",
+    "expectedMin": 75,
+    "expectedMax": 98
+  },
+  {
+    "id": "MOD_04",
+    "category": "Minor Modification",
+    "name": "Merge Sort Minor Edit",
+    "original": "Merge sort divides the input array into two halves, calls itself for the two halves, and then merges the two sorted halves.",
+    "input": "Merge sort splits the input array into two halves, recursively sorts the two halves, and merges the two sorted halves.",
+    "expectedMin": 75,
+    "expectedMax": 98
+  },
+  {
+    "id": "MOD_05",
+    "category": "Minor Modification",
+    "name": "Valid Parentheses Minor Edit",
+    "original": "Given a string s containing brackets, determine if the input string has valid matching pairs.",
+    "input": "Given a string s containing bracket characters, check if the input string contains valid matching pairs.",
+    "expectedMin": 75,
+    "expectedMax": 98
+  },
+  {
+    "id": "MOD_06",
+    "category": "Minor Modification",
+    "name": "Max Subarray Minor Edit",
+    "original": "Given an integer array nums, find the contiguous subarray with the largest sum, and return its sum.",
+    "input": "Given an array of integers nums, find the continuous subarray with the maximum sum, and return that sum.",
+    "expectedMin": 75,
+    "expectedMax": 98
+  },
+  {
+    "id": "MOD_07",
+    "category": "Minor Modification",
+    "name": "Stock Profit Minor Edit",
+    "original": "You want to maximize your profit by choosing a single day to buy one stock and choosing a different day to sell.",
+    "input": "You wish to maximize total profit by selecting a single day to buy a stock and selecting a future day to sell.",
+    "expectedMin": 75,
+    "expectedMax": 98
+  },
+  {
+    "id": "MOD_08",
+    "category": "Minor Modification",
+    "name": "Graph DFS Minor Edit",
+    "original": "Depth-first search is an algorithm for traversing or searching tree or graph data structures starting at the root.",
+    "input": "Depth-first search is a graph traversal algorithm for visiting vertices in tree or graph data structures starting at the root node.",
+    "expectedMin": 75,
+    "expectedMax": 98
+  },
+  {
+    "id": "MOD_09",
+    "category": "Minor Modification",
+    "name": "Hash Table Definition Minor Edit",
+    "original": "A hash table is a data structure that implements an associative array abstract data type using a hash function.",
+    "input": "A hash table is a key-value data structure that implements an associative array data type through a hash function.",
+    "expectedMin": 75,
+    "expectedMax": 98
+  },
+  {
+    "id": "MOD_10",
+    "category": "Minor Modification",
+    "name": "Trie Tree Minor Edit",
+    "original": "A trie is an efficient information re-trie-val data structure that stores keys usually represented by strings.",
+    "input": "A trie is an efficient prefix tree data structure used to store and retrieve keys consisting of strings.",
+    "expectedMin": 75,
+    "expectedMax": 98
+  },
+  {
+    "id": "PARA_01",
+    "category": "Paraphrase",
+    "name": "Binary Search Paraphrase",
+    "original": "Binary search repeatedly divides a sorted search space in half.",
+    "input": "The algorithm reduces the ordered search range by half after each comparison.",
+    "expectedMin": 45,
+    "expectedMax": 85
+  },
+  {
+    "id": "PARA_02",
+    "category": "Paraphrase",
+    "name": "Two Sum Paraphrase",
+    "original": "Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.",
+    "input": "Find the positions of two elements in a numerical list whose sum matches the requested target value.",
+    "expectedMin": 45,
+    "expectedMax": 85
+  },
+  {
+    "id": "PARA_03",
+    "category": "Paraphrase",
+    "name": "Quicksort Paraphrase",
+    "original": "Quicksort works by selecting a pivot element from the array and partitioning the other elements into two sub-arrays.",
+    "input": "The sorting method chooses a central pivot item and rearranges the remaining numbers into smaller and larger subsets.",
+    "expectedMin": 45,
+    "expectedMax": 85
+  },
+  {
+    "id": "PARA_04",
+    "category": "Paraphrase",
+    "name": "Dijkstra Paraphrase",
+    "original": "Dijkstra's algorithm finds the shortest path between nodes in a graph with non-negative edge costs.",
+    "input": "This routing technique calculates the lowest distance between vertices across a network where edge weights cannot be negative.",
+    "expectedMin": 45,
+    "expectedMax": 85
+  },
+  {
+    "id": "PARA_05",
+    "category": "Paraphrase",
+    "name": "Dynamic Programming Paraphrase",
+    "original": "Dynamic programming solves complex problems by breaking them down into simpler overlapping subproblems and caching solutions.",
+    "input": "The paradigm resolves complicated challenges by partitioning them into recurring smaller problems and memoizing previous answers.",
+    "expectedMin": 45,
+    "expectedMax": 85
+  },
+  {
+    "id": "PARA_06",
+    "category": "Paraphrase",
+    "name": "LRU Cache Paraphrase",
+    "original": "An LRU cache evicts the least recently accessed items first when the capacity limit is reached.",
+    "input": "When memory fills up, the storage system discards whichever entry has remained unused for the longest duration.",
+    "expectedMin": 45,
+    "expectedMax": 85
+  },
+  {
+    "id": "PARA_07",
+    "category": "Paraphrase",
+    "name": "Breadth First Search Paraphrase",
+    "original": "Breadth-first search traverses a tree level by level using a first-in-first-out queue.",
+    "input": "Level-order traversal visits all neighboring nodes at the current depth before moving deeper into the graph structure.",
+    "expectedMin": 45,
+    "expectedMax": 85
+  },
+  {
+    "id": "PARA_08",
+    "category": "Paraphrase",
+    "name": "Bubble Sort Paraphrase",
+    "original": "Bubble sort repeatedly steps through the list, compares adjacent elements and swaps them if they are in the wrong order.",
+    "input": "The simplest sorting routine repeatedly scans consecutive items and exchanges their locations when out of order.",
+    "expectedMin": 45,
+    "expectedMax": 85
+  },
+  {
+    "id": "PARA_09",
+    "category": "Paraphrase",
+    "name": "Database Index Paraphrase",
+    "original": "A database index improves the speed of data retrieval operations on a table at the cost of additional storage and slower writes.",
+    "input": "Indexes accelerate query lookups across database tables while consuming extra disk space and adding overhead to write operations.",
+    "expectedMin": 45,
+    "expectedMax": 85
+  },
+  {
+    "id": "PARA_10",
+    "category": "Paraphrase",
+    "name": "REST API Concept Paraphrase",
+    "original": "Representational State Transfer is an architectural style for providing standards between computer systems on the web.",
+    "input": "REST constitutes a standardized architectural blueprint for exchanging resources over HTTP across distributed web services.",
+    "expectedMin": 45,
+    "expectedMax": 85
+  },
+  {
+    "id": "UNRELATED_01",
+    "category": "Unrelated",
+    "name": "ML vs Geography",
+    "original": "Machine learning models can classify images using deep convolutional neural networks.",
+    "input": "India is the seventh-largest country by geographical area and the most populous democracy in the world.",
+    "expectedMin": 0,
+    "expectedMax": 20
+  },
+  {
+    "id": "UNRELATED_02",
+    "category": "Unrelated",
+    "name": "Two Sum vs Baking Recipe",
+    "original": "Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.",
+    "input": "Preheat the oven to 350 degrees Fahrenheit and mix the flour, sugar, butter, and vanilla extract in a large bowl.",
+    "expectedMin": 0,
+    "expectedMax": 20
+  },
+  {
+    "id": "UNRELATED_03",
+    "category": "Unrelated",
+    "name": "Binary Search vs Gardening",
+    "original": "Binary search repeatedly divides a sorted search space in half.",
+    "input": "Tomatoes need plenty of sunlight and regular watering to grow properly in garden soil.",
+    "expectedMin": 0,
+    "expectedMax": 20
+  },
+  {
+    "id": "UNRELATED_04",
+    "category": "Unrelated",
+    "name": "Operating Systems vs Renaissance Art",
+    "original": "Virtual memory manages memory hierarchy using paging and page replacement algorithms.",
+    "input": "Leonardo da Vinci painted the Mona Lisa in Florence during the Italian Renaissance.",
+    "expectedMin": 0,
+    "expectedMax": 20
+  },
+  {
+    "id": "UNRELATED_05",
+    "category": "Unrelated",
+    "name": "Compiler Design vs Ocean Wildlife",
+    "original": "Lexical analysis converts a sequence of characters into a sequence of syntactic tokens.",
+    "input": "Dolphins use echolocation to navigate underwater depths and communicate across pods.",
+    "expectedMin": 0,
+    "expectedMax": 20
+  },
+  {
+    "id": "UNRELATED_06",
+    "category": "Unrelated",
+    "name": "Database Sharding vs Classical Music",
+    "original": "Sharding partitions large database tables across multiple independent database server instances.",
+    "input": "Beethoven composed his Ninth Symphony despite suffering from severe hearing impairment.",
+    "expectedMin": 0,
+    "expectedMax": 20
+  },
+  {
+    "id": "UNRELATED_07",
+    "category": "Unrelated",
+    "name": "Sorting vs Ancient Architecture",
+    "original": "Quicksort has an average time complexity of O(n log n) and partitions around a pivot.",
+    "input": "The Great Pyramid of Giza was built as a tomb for the Egyptian Pharaoh Khufu.",
+    "expectedMin": 0,
+    "expectedMax": 20
+  },
+  {
+    "id": "UNRELATED_08",
+    "category": "Unrelated",
+    "name": "Cryptography vs Scuba Diving",
+    "original": "RSA encryption relies on the practical difficulty of factoring the product of two large prime numbers.",
+    "input": "Coral reefs support thousands of tropical fish species in shallow marine ecosystems.",
+    "expectedMin": 0,
+    "expectedMax": 20
+  },
+  {
+    "id": "UNRELATED_09",
+    "category": "Unrelated",
+    "name": "Garbage Collection vs Tennis Rules",
+    "original": "Mark-and-sweep garbage collection identifies reachable objects and reclaims unused heap memory.",
+    "input": "A tennis match begins with a serve from behind the baseline diagonally into the opponent's service box.",
+    "expectedMin": 0,
+    "expectedMax": 20
+  },
+  {
+    "id": "UNRELATED_10",
+    "category": "Unrelated",
+    "name": "Networking vs Photography",
+    "original": "TCP provides reliable, ordered, and error-checked delivery of a stream of octets between applications.",
+    "input": "Adjusting the camera aperture controls the depth of field and the amount of light entering the lens.",
+    "expectedMin": 0,
+    "expectedMax": 20
+  },
+  {
+    "id": "TECH_01",
+    "category": "Technical Questions",
+    "name": "Short Question Two Sum",
+    "original": "Given an array of integers nums and target, return indices of two numbers that add to target.",
+    "input": "Given an array of integers nums and target, return indices of two numbers that add to target.",
+    "expectedMin": 80,
+    "expectedMax": 100
+  },
+  {
+    "id": "TECH_02",
+    "category": "Technical Questions",
+    "name": "What is two sum",
+    "original": "What is the two sum problem in algorithms?",
+    "input": "What is the two sum problem in algorithms?",
+    "expectedMin": 80,
+    "expectedMax": 100
+  },
+  {
+    "id": "TECH_03",
+    "category": "Technical Questions",
+    "name": "Short LeetCode 3Sum",
+    "original": "Given an integer array nums, return all the triplets [nums[i], nums[j], nums[k]] such that i != j, i != k, and j != k, and nums[i] + nums[j] + nums[k] == 0.",
+    "input": "Given an integer array nums, return all the triplets [nums[i], nums[j], nums[k]] such that i != j, i != k, and j != k, and nums[i] + nums[j] + nums[k] == 0.",
+    "expectedMin": 85,
+    "expectedMax": 100
+  },
+  {
+    "id": "TECH_04",
+    "category": "Technical Questions",
+    "name": "LeetCode Container With Most Water",
+    "original": "You are given an integer array height of length n. Find two lines that together with the x-axis form a container, such that the container contains the most water.",
+    "input": "You are given an integer array height of length n. Find two lines that together with the x-axis form a container, such that the container contains the most water.",
+    "expectedMin": 85,
+    "expectedMax": 100
+  },
+  {
+    "id": "TECH_05",
+    "category": "Technical Questions",
+    "name": "LeetCode Climb Stairs",
+    "original": "You are climbing a staircase. It takes n steps to reach the top. Each time you can either climb 1 or 2 steps. In how many distinct ways can you climb to the top?",
+    "input": "You are climbing a staircase. It takes n steps to reach the top. Each time you can either climb 1 or 2 steps. In how many distinct ways can you climb to the top?",
+    "expectedMin": 85,
+    "expectedMax": 100
+  },
+  {
+    "id": "TECH_06",
+    "category": "Technical Questions",
+    "name": "LeetCode Coin Change",
+    "original": "You are given an integer array coins representing coins of different denominations and an integer amount representing a total amount of money.",
+    "input": "You are given an integer array coins representing coins of different denominations and an integer amount representing a total amount of money.",
+    "expectedMin": 85,
+    "expectedMax": 100
+  },
+  {
+    "id": "TECH_07",
+    "category": "Technical Questions",
+    "name": "Short Merge Intervals",
+    "original": "Given an array of intervals where intervals[i] = [starti, endi], merge all overlapping intervals.",
+    "input": "Given an array of intervals where intervals[i] = [starti, endi], merge all overlapping intervals.",
+    "expectedMin": 85,
+    "expectedMax": 100
+  },
+  {
+    "id": "TECH_08",
+    "category": "Technical Questions",
+    "name": "Short Longest Common Subsequence",
+    "original": "Given two strings text1 and text2, return the length of their longest common subsequence.",
+    "input": "Given two strings text1 and text2, return the length of their longest common subsequence.",
+    "expectedMin": 85,
+    "expectedMax": 100
+  },
+  {
+    "id": "TECH_09",
+    "category": "Technical Questions",
+    "name": "Short Word Break",
+    "original": "Given a string s and a dictionary of strings wordDict, return true if s can be segmented into a space-separated sequence of dictionary words.",
+    "input": "Given a string s and a dictionary of strings wordDict, return true if s can be segmented into a space-separated sequence of dictionary words.",
+    "expectedMin": 85,
+    "expectedMax": 100
+  },
+  {
+    "id": "TECH_10",
+    "category": "Technical Questions",
+    "name": "Short Longest Palindromic Substring",
+    "original": "Given a string s, return the longest palindromic substring in s.",
+    "input": "Given a string s, return the longest palindromic substring in s.",
+    "expectedMin": 80,
+    "expectedMax": 100
+  },
+  {
+    "id": "CODE_01",
+    "category": "Code Similarity",
+    "name": "Two Sum JS Renamed Vars",
+    "original": "function twoSum(nums, target) {\n  const map = new Map();\n  for (let i = 0; i < nums.length; i++) {\n    const complement = target - nums[i];\n    if (map.has(complement)) {\n      return [map.get(complement), i];\n    }\n    map.set(nums[i], i);\n  }\n  return [];\n}",
+    "input": "function findTwoSum(arr, sumTarget) {\n  const lookup = new Map();\n  for (let idx = 0; idx < arr.length; idx++) {\n    const diff = sumTarget - arr[idx];\n    if (lookup.has(diff)) {\n      return [lookup.get(diff), idx];\n    }\n    lookup.set(arr[idx], idx);\n  }\n  return [];\n}",
+    "expectedMin": 70,
+    "expectedMax": 100
+  },
+  {
+    "id": "CODE_02",
+    "category": "Code Similarity",
+    "name": "Binary Search Python Renamed",
+    "original": "def binary_search(arr, target):\n    low = 0\n    high = len(arr) - 1\n    while low <= high:\n        mid = (low + high) // 2\n        if arr[mid] == target:\n            return mid\n        elif arr[mid] < target:\n            low = mid + 1\n        else:\n            high = mid - 1\n    return -1",
+    "input": "def search_element(numbers, key):\n    start = 0\n    end = len(numbers) - 1\n    while start <= end:\n        middle = (start + end) // 2\n        if numbers[middle] == key:\n            return middle\n        elif numbers[middle] < key:\n            start = middle + 1\n        else:\n            end = middle - 1\n    return -1",
+    "expectedMin": 70,
+    "expectedMax": 100
+  },
+  {
+    "id": "CODE_03",
+    "category": "Code Similarity",
+    "name": "Bubble Sort C++",
+    "original": "void bubbleSort(int arr[], int n) {\n    for (int i = 0; i < n - 1; i++) {\n        for (int j = 0; j < n - i - 1; j++) {\n            if (arr[j] > arr[j + 1]) {\n                swap(arr[j], arr[j + 1]);\n            }\n        }\n    }\n}",
+    "input": "void sortArray(int elements[], int size) {\n    for (int p = 0; p < size - 1; p++) {\n        for (int q = 0; q < size - p - 1; q++) {\n            if (elements[q] > elements[q + 1]) {\n                swap(elements[q], elements[q + 1]);\n            }\n        }\n    }\n}",
+    "expectedMin": 70,
+    "expectedMax": 100
+  },
+  {
+    "id": "CODE_04",
+    "category": "Code Similarity",
+    "name": "Reverse String JS",
+    "original": "function reverseString(str) {\n    let reversed = '';\n    for (let i = str.length - 1; i >= 0; i--) {\n        reversed += str[i];\n    }\n    return reversed;\n}",
+    "input": "function invertText(val) {\n    let out = '';\n    for (let k = val.length - 1; k >= 0; k--) {\n        out += val[k];\n    }\n    return out;\n}",
+    "expectedMin": 70,
+    "expectedMax": 100
+  },
+  {
+    "id": "CODE_05",
+    "category": "Code Similarity",
+    "name": "Factorial Recursion Python",
+    "original": "def factorial(n):\n    if n <= 1:\n        return 1\n    return n * factorial(n - 1)",
+    "input": "def calc_fact(num):\n    if num <= 1:\n        return 1\n    return num * calc_fact(num - 1)",
+    "expectedMin": 70,
+    "expectedMax": 100
+  },
+  {
+    "id": "CODE_06",
+    "category": "Code Similarity",
+    "name": "Fibonacci Iterative JS",
+    "original": "function fibonacci(n) {\n    let a = 0, b = 1;\n    for (let i = 2; i <= n; i++) {\n        let c = a + b;\n        a = b;\n        b = c;\n    }\n    return b;\n}",
+    "input": "function getFib(count) {\n    let prev = 0, curr = 1;\n    for (let step = 2; step <= count; step++) {\n        let next = prev + curr;\n        prev = curr;\n        curr = next;\n    }\n    return curr;\n}",
+    "expectedMin": 70,
+    "expectedMax": 100
+  },
+  {
+    "id": "CODE_07",
+    "category": "Code Similarity",
+    "name": "Valid Palindrome Python",
+    "original": "def is_palindrome(s):\n    left, right = 0, len(s) - 1\n    while left < right:\n        if s[left] != s[right]:\n            return False\n        left += 1\n        right -= 1\n    return True",
+    "input": "def check_pal(word):\n    p1, p2 = 0, len(word) - 1\n    while p1 < p2:\n        if word[p1] != word[p2]:\n            return False\n        p1 += 1\n        p2 -= 1\n    return True",
+    "expectedMin": 70,
+    "expectedMax": 100
+  },
+  {
+    "id": "CODE_08",
+    "category": "Code Similarity",
+    "name": "Stack Implementation JS",
+    "original": "class Stack {\n    constructor() {\n        this.items = [];\n    }\n    push(item) {\n        this.items.push(item);\n    }\n    pop() {\n        return this.items.pop();\n    }\n    isEmpty() {\n        return this.items.length === 0;\n    }\n}",
+    "input": "class CustomStack {\n    constructor() {\n        this.storage = [];\n    }\n    push(val) {\n        this.storage.push(val);\n    }\n    pop() {\n        return this.storage.pop();\n    }\n    isEmpty() {\n        return this.storage.length === 0;\n    }\n}",
+    "expectedMin": 70,
+    "expectedMax": 100
+  },
+  {
+    "id": "CODE_09",
+    "category": "Code Similarity",
+    "name": "Linear Search C++",
+    "original": "int linearSearch(int arr[], int n, int x) {\n    for (int i = 0; i < n; i++) {\n        if (arr[i] == x)\n            return i;\n    }\n    return -1;\n}",
+    "input": "int findItem(int list[], int length, int targetVal) {\n    for (int idx = 0; idx < length; idx++) {\n        if (list[idx] == targetVal)\n            return idx;\n    }\n    return -1;\n}",
+    "expectedMin": 70,
+    "expectedMax": 100
+  },
+  {
+    "id": "CODE_10",
+    "category": "Code Similarity",
+    "name": "Max Element in Array Python",
+    "original": "def find_max(numbers):\n    max_val = numbers[0]\n    for x in numbers:\n        if x > max_val:\n            max_val = x\n    return max_val",
+    "input": "def get_highest(elements):\n    current_max = elements[0]\n    for item in elements:\n        if item > current_max:\n            current_max = item\n    return current_max",
+    "expectedMin": 70,
+    "expectedMax": 100
+  }
+]

@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import api from "../services/api";
 import { toast } from "react-toastify";
 
@@ -12,10 +12,12 @@ import "react-circular-progressbar/dist/styles.css";
 import {
   FaCloudUploadAlt,
   FaFilePdf,
+  FaTimes,
+  FaCheckCircle,
+  FaDownload,
+  FaExchangeAlt,
+  FaLayerGroup,
 } from "react-icons/fa";
-
-import ReportHistory from "../components/ReportHistory";
-import MatchedContent from "../components/MatchedContent";
 
 function PDFChecker() {
   const [pdf1, setPdf1] = useState(null);
@@ -23,9 +25,8 @@ function PDFChecker() {
 
   const [score, setScore] = useState(null);
   const [matches, setMatches] = useState([]);
-
+  const [analysis, setAnalysis] = useState(null);
   const [scanTime, setScanTime] = useState("");
-
   const [loading, setLoading] = useState(false);
 
   const handleCompare = async () => {
@@ -36,32 +37,24 @@ function PDFChecker() {
 
     try {
       setLoading(true);
+      setScore(null);
+      setMatches([]);
 
       const formData = new FormData();
-
       formData.append("pdf1", pdf1);
       formData.append("pdf2", pdf2);
 
-      const response = await api.post(
-        "/pdf/compare",
-        formData
-      );
+      const response = await api.post("/pdf/compare", formData);
 
-      setScore(response.data.similarityScore);
-
+      setScore(response.data.similarityScore ?? 0);
       setMatches(response.data.matches || []);
-
-      setScanTime(
-        new Date().toLocaleString()
-      );
+      setAnalysis(response.data.analysis || null);
+      setScanTime(new Date().toLocaleString());
 
       toast.success("Comparison completed.");
     } catch (error) {
-      console.log(error);
-
-      toast.error(
-        "Unable to compare PDFs."
-      );
+      console.error(error);
+      toast.error(error.response?.data?.message || "Unable to compare PDFs.");
     } finally {
       setLoading(false);
     }
@@ -72,281 +65,206 @@ function PDFChecker() {
       return {
         label: "LOW RISK",
         color: "#22c55e",
-        message:
-          "No significant plagiarism detected.",
+        message: "No significant plagiarism detected between the documents.",
       };
 
     if (score < 50)
       return {
         label: "MEDIUM RISK",
         color: "#eab308",
-        message:
-          "Moderate similarity detected.",
+        message: "Moderate overlap detected. Common citations or similar references.",
       };
 
     return {
       label: "HIGH RISK",
       color: "#ef4444",
-      message:
-        "Potential plagiarism detected.",
+      message: "Substantial direct overlap detected between these documents.",
     };
   };
 
+  const risk = score !== null ? getRiskLevel() : null;
+
   const downloadReport = async () => {
     try {
-      const risk = getRiskLevel();
-
+      const riskInfo = getRiskLevel();
       const response = await api.post(
         "/report/generate",
         {
           score,
-          risk: risk.label,
+          risk: riskInfo.label,
         },
         {
           responseType: "blob",
         }
       );
 
-      const url =
-        window.URL.createObjectURL(
-          new Blob([response.data])
-        );
-
-      const link =
-        document.createElement("a");
-
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement("a");
       link.href = url;
-
-      link.download =
-        "ZeroTrace_Report.pdf";
-
+      link.download = `ZeroTrace_PDF_Report_${Date.now()}.pdf`;
       document.body.appendChild(link);
-
       link.click();
-
       link.remove();
+      toast.success("PDF Report downloaded.");
     } catch (error) {
-      console.log(error);
-
-      toast.error(
-        "Unable to download report."
-      );
+      console.error(error);
+      toast.error("Unable to download report.");
     }
   };
 
-  const risk =
-    score !== null
-      ? getRiskLevel()
-      : null;
+  const formatFileSize = (bytes) => {
+    if (!bytes) return "0 KB";
+    const k = 1024;
+    const sizes = ["Bytes", "KB", "MB", "GB"];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + " " + sizes[i];
+  };
 
   return (
-    <div className="min-h-screen bg-[#09090F] text-white px-8 py-10">
-
+    <div className="min-h-screen bg-[#09090F] text-white px-6 md:px-8 py-10">
       <div className="max-w-7xl mx-auto">
-
-        <div className="text-center mb-12">
-
-          <h1 className="text-5xl font-black">
-            PDF Similarity Checker
+        <div className="text-center mb-10">
+          <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-xs font-semibold mb-4">
+            <FaExchangeAlt /> Direct Document Alignment
+          </span>
+          <h1 className="text-4xl md:text-5xl font-black">
+            PDF & Document Similarity Checker
           </h1>
-
-          <p className="text-gray-400 mt-4 text-lg">
-            Compare two PDF documents using ZeroTrace AI.
+          <p className="text-gray-400 mt-3 text-base md:text-lg max-w-2xl mx-auto">
+            Upload two documents (PDF / DOCX) to perform an offline, passage-by-passage structural and lexical comparison.
           </p>
-
         </div>
 
-        {/* Upload Cards */}
-
-        <div className="grid md:grid-cols-2 gap-8 mb-10"></div>
-                  {/* First PDF */}
-
-          <label
-            className="
-              bg-[#151523]
-              border-2
-              border-dashed
-              border-[#2D2D44]
-              rounded-3xl
-              p-10
-              cursor-pointer
-              hover:border-cyan-400
-              transition-all
-              duration-300
-            "
-          >
-            <input
-              type="file"
-              accept=".pdf"
-              hidden
-              onChange={(e) =>
-                setPdf1(e.target.files[0])
-              }
-            />
-
-            <div className="flex flex-col items-center text-center">
-
-              <FaCloudUploadAlt
-                className="text-cyan-400 mb-5"
-                size={60}
+        {/* Upload Cards Grid */}
+        <div className="grid md:grid-cols-2 gap-6 mb-8">
+          {/* First PDF */}
+          <div className="relative">
+            <label
+              className={`
+                bg-[#151523] border-2 border-dashed rounded-3xl p-8 md:p-10 cursor-pointer block
+                hover:border-cyan-400 transition-all duration-300 text-center
+                ${pdf1 ? "border-cyan-500/60 bg-[#161628]" : "border-[#2D2D44]"}
+              `}
+            >
+              <input
+                type="file"
+                accept=".pdf,.docx,.txt"
+                hidden
+                onChange={(e) => {
+                  if (e.target.files?.[0]) setPdf1(e.target.files[0]);
+                }}
               />
 
-              <h2 className="text-2xl font-bold">
-                Upload First PDF
-              </h2>
+              <div className="flex flex-col items-center">
+                <FaCloudUploadAlt className="text-cyan-400 mb-4" size={54} />
+                <h2 className="text-xl font-bold">
+                  {pdf1 ? "Replace Document 1" : "Upload Document 1 (Original)"}
+                </h2>
+                <p className="text-gray-400 text-xs mt-2">
+                  Supports PDF, DOCX, and TXT files
+                </p>
 
-              <p className="text-gray-400 mt-3">
-                Click to browse or replace the file.
-              </p>
-
-              {pdf1 && (
-                <div
-                  className="
-                    mt-6
-                    bg-[#10101A]
-                    border
-                    border-cyan-500/40
-                    rounded-xl
-                    px-5
-                    py-4
-                    flex
-                    items-center
-                    gap-3
-                  "
-                >
-                  <FaFilePdf className="text-red-400" />
-
-                  <span className="break-all">
-                    {pdf1.name}
-                  </span>
-                </div>
-              )}
-
-            </div>
-
-          </label>
+                {pdf1 && (
+                  <div className="mt-5 w-full bg-[#10101A] border border-cyan-500/40 rounded-2xl p-4 flex items-center justify-between gap-3">
+                    <div className="flex items-center gap-3 truncate">
+                      <FaFilePdf className="text-red-400 flex-shrink-0 text-xl" />
+                      <div className="text-left truncate">
+                        <p className="text-sm font-semibold truncate text-white">{pdf1.name}</p>
+                        <p className="text-xs text-gray-400">{formatFileSize(pdf1.size)}</p>
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setPdf1(null);
+                      }}
+                      className="text-gray-400 hover:text-red-400 p-1.5 rounded-lg hover:bg-[#1E1E2F] transition"
+                    >
+                      <FaTimes />
+                    </button>
+                  </div>
+                )}
+              </div>
+            </label>
+          </div>
 
           {/* Second PDF */}
-
-          <label
-            className="
-              bg-[#151523]
-              border-2
-              border-dashed
-              border-[#2D2D44]
-              rounded-3xl
-              p-10
-              cursor-pointer
-              hover:border-cyan-400
-              transition-all
-              duration-300
-            "
-          >
-            <input
-              type="file"
-              accept=".pdf"
-              hidden
-              onChange={(e) =>
-                setPdf2(e.target.files[0])
-              }
-            />
-
-            <div className="flex flex-col items-center text-center">
-
-              <FaCloudUploadAlt
-                className="text-cyan-400 mb-5"
-                size={60}
+          <div className="relative">
+            <label
+              className={`
+                bg-[#151523] border-2 border-dashed rounded-3xl p-8 md:p-10 cursor-pointer block
+                hover:border-cyan-400 transition-all duration-300 text-center
+                ${pdf2 ? "border-cyan-500/60 bg-[#161628]" : "border-[#2D2D44]"}
+              `}
+            >
+              <input
+                type="file"
+                accept=".pdf,.docx,.txt"
+                hidden
+                onChange={(e) => {
+                  if (e.target.files?.[0]) setPdf2(e.target.files[0]);
+                }}
               />
 
-              <h2 className="text-2xl font-bold">
-                Upload Second PDF
-              </h2>
+              <div className="flex flex-col items-center">
+                <FaCloudUploadAlt className="text-purple-400 mb-4" size={54} />
+                <h2 className="text-xl font-bold">
+                  {pdf2 ? "Replace Document 2" : "Upload Document 2 (Comparison Target)"}
+                </h2>
+                <p className="text-gray-400 text-xs mt-2">
+                  Supports PDF, DOCX, and TXT files
+                </p>
 
-              <p className="text-gray-400 mt-3">
-                Select another document for comparison.
-              </p>
-
-              {pdf2 && (
-                <div
-                  className="
-                    mt-6
-                    bg-[#10101A]
-                    border
-                    border-cyan-500/40
-                    rounded-xl
-                    px-5
-                    py-4
-                    flex
-                    items-center
-                    gap-3
-                  "
-                >
-                  <FaFilePdf className="text-red-400" />
-
-                  <span className="break-all">
-                    {pdf2.name}
-                  </span>
-                </div>
-              )}
-
-            </div>
-
-          </label>
-
+                {pdf2 && (
+                  <div className="mt-5 w-full bg-[#10101A] border border-purple-500/40 rounded-2xl p-4 flex items-center justify-between gap-3">
+                    <div className="flex items-center gap-3 truncate">
+                      <FaFilePdf className="text-red-400 flex-shrink-0 text-xl" />
+                      <div className="text-left truncate">
+                        <p className="text-sm font-semibold truncate text-white">{pdf2.name}</p>
+                        <p className="text-xs text-gray-400">{formatFileSize(pdf2.size)}</p>
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setPdf2(null);
+                      }}
+                      className="text-gray-400 hover:text-red-400 p-1.5 rounded-lg hover:bg-[#1E1E2F] transition"
+                    >
+                      <FaTimes />
+                    </button>
+                  </div>
+                )}
+              </div>
+            </label>
+          </div>
         </div>
 
         {/* Compare Button */}
-
         <div className="text-center mb-12">
-
           <button
             onClick={handleCompare}
-            disabled={loading}
+            disabled={loading || !pdf1 || !pdf2}
             className="
-              bg-cyan-500
-              hover:bg-cyan-600
-              disabled:opacity-60
-              disabled:cursor-not-allowed
-              transition
-              px-10
-              py-4
-              rounded-2xl
-              text-lg
-              font-bold
+              bg-cyan-500 hover:bg-cyan-600 disabled:opacity-50 disabled:cursor-not-allowed
+              transition px-10 py-4 rounded-2xl text-lg font-bold shadow-lg shadow-cyan-500/20
             "
           >
-            {loading
-              ? "Comparing PDFs..."
-              : "Compare PDFs"}
+            {loading ? "Comparing Documents..." : "Compare Documents"}
           </button>
-
         </div>
 
+        {/* Results View */}
         {score !== null && (
-
-          <>
-
-            {/* Result Cards */}
-
-            <div className="grid lg:grid-cols-3 gap-8">
-
-              <div
-                className="
-                  bg-[#151523]
-                  rounded-3xl
-                  border
-                  border-[#2D2D44]
-                  p-8
-                  text-center
-                "
-              >
-
-                <h2 className="text-xl font-bold mb-8">
-                  Similarity Score
-                </h2>
-
-                <div className="w-40 h-40 mx-auto">
-
+          <div className="space-y-8 animate-fadeIn">
+            {/* Overview Result Cards */}
+            <div className="grid lg:grid-cols-3 gap-6">
+              {/* Score Circular Gauge */}
+              <div className="bg-[#151523] rounded-3xl border border-[#2D2D44] p-6 text-center">
+                <h2 className="text-lg font-bold mb-4 text-gray-300">Document Similarity Score</h2>
+                <div className="w-36 h-36 mx-auto">
                   <CircularProgressbar
                     value={score}
                     text={`${score}%`}
@@ -354,211 +272,115 @@ function PDFChecker() {
                       textColor: "#fff",
                       trailColor: "#2D2D44",
                       pathColor: risk.color,
+                      textSize: "20px",
                     })}
                   />
-
                 </div>
-
+                <p className="text-xs text-gray-400 mt-4">
+                  Multi-signal token coverage
+                </p>
               </div>
 
-              <div
-                className="
-                  bg-[#151523]
-                  rounded-3xl
-                  border
-                  border-[#2D2D44]
-                  p-8
-                "
-              >
-
-                <h2 className="text-xl font-bold">
-                  Risk Level
-                </h2>
-
-                <h1
-                  className="text-5xl font-black mt-8"
-                  style={{
-                    color: risk.color,
-                  }}
-                >
+              {/* Risk Level Card */}
+              <div className="bg-[#151523] rounded-3xl border border-[#2D2D44] p-6 flex flex-col justify-center">
+                <p className="text-gray-400 text-sm">Plagiarism Risk</p>
+                <h1 className="text-4xl font-black mt-3" style={{ color: risk.color }}>
                   {risk.label}
                 </h1>
-
-                <p className="text-gray-400 mt-6 leading-7">
+                <p className="text-gray-400 text-sm mt-3 leading-relaxed">
                   {risk.message}
                 </p>
-
               </div>
 
-              <div
-                className="
-                  bg-[#151523]
-                  rounded-3xl
-                  border
-                  border-[#2D2D44]
-                  p-8
-                "
-              >
-
-                <h2 className="text-xl font-bold mb-5">
-                  Scan Information
-                </h2>
-
-                <div className="space-y-5 text-gray-300">
-
-                  <p>
-                    <strong>PDF 1:</strong><br />
-                    {pdf1?.name}
+              {/* Scan Info */}
+              <div className="bg-[#151523] rounded-3xl border border-[#2D2D44] p-6 flex flex-col justify-center">
+                <h2 className="text-lg font-bold mb-4 text-gray-300">Scan Metadata</h2>
+                <div className="space-y-2.5 text-xs text-gray-300">
+                  <p className="truncate">
+                    <strong className="text-gray-400">Doc 1:</strong> {pdf1?.name}
                   </p>
-
-                  <p>
-                    <strong>PDF 2:</strong><br />
-                    {pdf2?.name}
+                  <p className="truncate">
+                    <strong className="text-gray-400">Doc 2:</strong> {pdf2?.name}
                   </p>
-
                   <p>
-                    <strong>Scanned:</strong><br />
-                    {scanTime}
+                    <strong className="text-gray-400">Scanned At:</strong> {scanTime}
                   </p>
-
+                  <p>
+                    <strong className="text-gray-400">Matched Segments:</strong> {matches.length}
+                  </p>
                 </div>
-
               </div>
-
             </div>
 
-            {/* Remaining result sections continue in Part 3 */}
-                        {/* AI Summary */}
+            {/* Breakdown Analysis if available */}
+            {analysis && (
+              <div className="bg-[#151523] border border-[#2D2D44] rounded-3xl p-6">
+                <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
+                  <FaLayerGroup className="text-cyan-400" />
+                  Comparison Signal Breakdown
+                </h2>
+                <div className="grid md:grid-cols-3 gap-4">
+                  <div className="bg-[#10101A] border border-[#2D2D44] rounded-2xl p-4">
+                    <p className="text-gray-400 text-xs">Exact Overlap</p>
+                    <h3 className="text-xl font-bold mt-1 text-red-400">{analysis.exactMatch || 0}%</h3>
+                  </div>
+                  <div className="bg-[#10101A] border border-[#2D2D44] rounded-2xl p-4">
+                    <p className="text-gray-400 text-xs">Near-Exact / Shingles</p>
+                    <h3 className="text-xl font-bold mt-1 text-yellow-400">{analysis.nearExactMatch || 0}%</h3>
+                  </div>
+                  <div className="bg-[#10101A] border border-[#2D2D44] rounded-2xl p-4">
+                    <p className="text-gray-400 text-xs">Semantic Overlap</p>
+                    <h3 className="text-xl font-bold mt-1 text-purple-400">{analysis.semanticSimilarity || 0}%</h3>
+                  </div>
+                </div>
+              </div>
+            )}
 
-            <div
-              className="
-                bg-[#151523]
-                rounded-3xl
-                border
-                border-[#2D2D44]
-                p-8
-                mt-8
-              "
-            >
-
-              <h2 className="text-2xl font-bold mb-5">
-                AI Analysis Summary
-              </h2>
-
-              <p className="text-gray-300 leading-8">
-
-                {score < 20 &&
-                  "The uploaded PDFs show very little similarity. The documents appear to be largely original with no major plagiarism concerns."}
-
-                {score >= 20 &&
-                  score < 50 &&
-                  "The uploaded PDFs contain a moderate amount of overlapping content. A manual review is recommended to determine whether the similarities are acceptable."}
-
-                {score >= 50 &&
-                  "The uploaded PDFs contain a high amount of similar content. This may indicate plagiarism and should be reviewed carefully before submission."}
-
-              </p>
-
-            </div>
-
-            {/* Matching Content */}
-
-            <div
-              className="
-                bg-[#151523]
-                rounded-3xl
-                border
-                border-[#2D2D44]
-                p-8
-                mt-8
-              "
-            >
-
+            {/* Matched Passages List */}
+            <div className="bg-[#151523] rounded-3xl border border-[#2D2D44] p-6 md:p-8">
               <h2 className="text-2xl font-bold mb-6">
-                Matching Content
+                Matched Content Passages ({matches.length})
               </h2>
 
               {matches.length === 0 ? (
-
-                <div
-                  className="
-                    bg-[#10101A]
-                    rounded-2xl
-                    p-6
-                    text-gray-400
-                  "
-                >
-                  No exact matching sentences were found.
+                <div className="bg-[#10101A] rounded-2xl p-6 text-gray-400 text-center">
+                  No overlapping passages detected between these documents.
                 </div>
-
               ) : (
-
-                <>
-                  <MatchedContent matches={matches} />
-
-                  <div className="space-y-4 mt-8">
-
-                    {matches.map((match, index) => (
-
+                <div className="space-y-3.5 max-h-[500px] overflow-y-auto pr-2">
+                  {matches.map((match, index) => {
+                    const text = typeof match === "string" ? match : match.sentence || match.matchedPassage;
+                    return (
                       <div
                         key={index}
-                        className="
-                          bg-red-500/10
-                          border
-                          border-red-500/30
-                          rounded-2xl
-                          p-5
-                        "
+                        className="bg-red-500/10 border border-red-500/20 rounded-2xl p-4 text-sm text-gray-200 font-mono leading-relaxed"
                       >
-                        {match}
+                        "{text}"
                       </div>
-
-                    ))}
-
-                  </div>
-
-                </>
-
+                    );
+                  })}
+                </div>
               )}
-
             </div>
 
-            {/* Actions */}
-
-            <div className="mt-10 flex flex-col items-center gap-6">
-
+            {/* Download Report */}
+            <div className="text-center pt-4">
               <button
                 onClick={downloadReport}
-                className="
-                  bg-cyan-500
-                  hover:bg-cyan-600
-                  transition
-                  px-10
-                  py-4
-                  rounded-2xl
-                  font-bold
-                  text-lg
-                "
+                className="bg-cyan-500 hover:bg-cyan-600 transition px-8 py-3.5 rounded-2xl font-bold flex items-center gap-3 mx-auto shadow-lg shadow-cyan-500/20"
               >
-                Download PDF Report
+                <FaDownload /> Download Detailed PDF Report
               </button>
-
-              <ReportHistory />
-
             </div>
-
-          </>
-
+          </div>
         )}
 
-        <footer className="text-center mt-20 text-gray-500 pb-6">
-          Powered by <span className="text-cyan-400 font-semibold">ZeroTrace</span>
+        <footer className="text-center mt-20 text-gray-500 pb-6 text-xs">
+          Powered by <span className="text-cyan-400 font-semibold">ZeroTrace Engine</span>
         </footer>
-
       </div>
-
+    </div>
   );
-
 }
 
 export default PDFChecker;

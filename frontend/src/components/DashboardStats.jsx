@@ -196,52 +196,32 @@ const DashboardStats = ({ stats }) => {
                   )
                 )}
               </Pie>
-
               <Tooltip />
-
             </PieChart>
-
           </ResponsiveContainer>
-
         </div>
-
       </div>
-
       {/* ================= OVERVIEW ================= */}
-
       <div className="bg-[#1a1a2e] border border-[#2a2a3e] rounded-3xl p-8 shadow-xl">
-
         <h2 className="text-2xl font-bold mb-6">
-
           Overview
-
         </h2>
-
         <ResponsiveContainer
           width="100%"
           height={300}
         >
-
           <BarChart data={overviewData}>
-
             <XAxis dataKey="name" />
-
             <YAxis />
-
             <Tooltip />
-
             <Bar
               dataKey="value"
               fill="#00d4ff"
               radius={[10, 10, 0, 0]}
             />
-
           </BarChart>
-
         </ResponsiveContainer>
-
       </div>
-
     </div>
   );
 };

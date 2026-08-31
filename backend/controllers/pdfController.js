@@ -1,26 +1,37 @@
+﻿const { parseDocument } = require("../services/documentParser");
 const fs = require("fs");
-const pdfParse = require("pdf-parse");
 
 const extractText = async (req, res) => {
   try {
-    const dataBuffer = fs.readFileSync(
-      req.file.path
-    );
+    if (!req.file) {
+      return res.status(400).json({
+        success: false,
+        message: "No document uploaded",
+      });
+    }
 
-    const data = await pdfParse(dataBuffer);
+    const parsed = await parseDocument(req.file);
 
-    res.status(200).json({
+    // Clean up temporary uploaded file
+    try {
+      if (req.file.path && fs.existsSync(req.file.path)) {
+        fs.unlinkSync(req.file.path);
+      }
+    } catch (e) {}
+
+    return res.status(200).json({
       success: true,
-      text: data.text,
+      text: parsed.text,
+      fileName: parsed.fileName,
+      wordCount: parsed.wordCount,
+      charCount: parsed.charCount,
     });
-
   } catch (error) {
-
-    res.status(500).json({
+    console.error("[EXTRACT] Error extracting document:", error);
+    return res.status(500).json({
       success: false,
       message: error.message,
     });
-
   }
 };
 

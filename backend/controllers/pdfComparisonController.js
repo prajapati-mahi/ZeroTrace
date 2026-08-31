@@ -1,109 +1,94 @@
-const fs = require("fs");
-const pdfParse = require("pdf-parse");
-
+﻿const fs = require("fs");
+const { parseDocument } = require("../services/documentParser");
+const plagiarismEngine = require("../engine/plagiarismEngine");
 const Report = require("../models/Report");
-
-const calculateSimilarity = require(
-  "../utils/similarity"
-);
 
 const comparePDFs = async (req, res) => {
   try {
-    const file1 = req.files.pdf1[0];
-    const file2 = req.files.pdf2[0];
+    const file1 = req.files?.pdf1?.[0] || req.files?.file1?.[0];
+    const file2 = req.files?.pdf2?.[0] || req.files?.file2?.[0];
 
-    const pdf1Buffer = fs.readFileSync(
-      file1.path
-    );
-
-    const pdf2Buffer = fs.readFileSync(
-      file2.path
-    );
-
-    const pdf1Text = await pdfParse(
-      pdf1Buffer
-    );
-
-    const pdf2Text = await pdfParse(
-      pdf2Buffer
-    );
-
-    // Similarity Score
-    const score = calculateSimilarity(
-      pdf1Text.text,
-      pdf2Text.text
-    );
-
-    // Matching Sentences
-    const matches = [];
-
-    const sentences1 =
-      pdf1Text.text.split(".");
-
-    const sentences2 =
-      pdf2Text.text.split(".");
-
-    sentences1.forEach((sentence1) => {
-      const clean1 =
-        sentence1.trim();
-
-      if (clean1.length < 20)
-        return;
-
-      sentences2.forEach((sentence2) => {
-        const clean2 =
-          sentence2.trim();
-
-        if (
-          clean1.toLowerCase() ===
-          clean2.toLowerCase()
-        ) {
-          matches.push(clean1);
-        }
+    if (!file1 || !file2) {
+      return res.status(400).json({
+        success: false,
+        message: "Please upload both documents for comparison",
       });
-    });
-
-    // Risk Calculation
-    let risk = "LOW RISK";
-
-    if (score >= 50) {
-      risk = "HIGH RISK";
-    } else if (score >= 20) {
-      risk = "MEDIUM RISK";
     }
 
-    await Report.create({
-  user: req.user.id,
+    const doc1 = await parseDocument(file1);
+    const doc2 = await parseDocument(file2);
 
-  title: `${file1.originalname} vs ${file2.originalname}`,
+    if (!doc1.text || !doc2.text) {
+      return res.status(400).json({
+        success: false,
+        message: "Unable to extract readable text from one or both uploaded documents",
+      });
+    }
 
-  text: "",
-
-  plagiarismScore: score,
-
-  aiScore: 0,
-
-  risk,
-
-  matches: matches.map((sentence) => ({
-    title: "Matched Sentence",
-    link: "",
-    score,
-  })),
-});
-
-    //console.log(Report);
-
-    // Response
-    res.status(200).json({
-      success: true,
-      similarityScore: score,
-      risk,
-      matches,
+    // Run multi-signal local comparison between Doc 1 and Doc 2
+    const result = await plagiarismEngine(doc1.text, {
+      referenceDocs: [
+        {
+          title: doc2.fileName || "Comparison Document",
+          link: doc2.fileName || "Comparison Document",
+          domain: "file",
+          content: doc2.text,
+        },
+      ],
+      localOnly: true,
     });
 
+    const matches = result.matchedSentences.map((m) => m.sentence);
+
+    // Save report if user is authenticated
+    let reportId = null;
+    if (req.user && req.user.id) {
+      const report = await Report.create({
+        user: req.user.id,
+        title: `${doc1.fileName} vs ${doc2.fileName}`,
+        text: doc1.text.substring(0, 5000),
+        plagiarismScore: result.plagiarismScore,
+        aiScore: 0,
+        risk: result.risk,
+        analysis: result.analysis,
+        stats: result.stats,
+        matches: result.matchedSources.map((source) => ({
+          title: source.title,
+          link: source.link,
+          domain: "file",
+          score: source.score,
+          confidence: source.confidence,
+          matchedPassages: source.matchedPassages,
+        })),
+        matchedSentences: result.matchedSentences,
+      });
+      reportId = report._id;
+    }
+
+    // Clean up temporary uploaded files
+    try {
+      if (file1.path && fs.existsSync(file1.path)) fs.unlinkSync(file1.path);
+      if (file2.path && fs.existsSync(file2.path)) fs.unlinkSync(file2.path);
+    } catch (cleanupErr) {
+      // Non-fatal
+    }
+
+    return res.status(200).json({
+      success: true,
+      similarityScore: result.plagiarismScore,
+      plagiarismScore: result.plagiarismScore,
+      risk: result.risk,
+      analysis: result.analysis,
+      matches,
+      matchedSentences: result.matchedSentences,
+      stats: result.stats,
+      doc1Name: doc1.fileName,
+      doc2Name: doc2.fileName,
+      reportId,
+    });
   } catch (error) {
-    res.status(500).json({
+    console.error("[PDF_COMPARE] Error comparing documents:", error);
+    return res.status(500).json({
       success: false,
       message: error.message,
     });
