@@ -1,20 +1,68 @@
 ﻿/**
  * ZeroTrace AI Content Detector Utility
- * Evaluates perplexity, burstiness, transition marker density, and linguistic uniformity.
+ * Evaluates LLM template signatures, transition markers, relative clause density,
+ * sentence length predictability, and burstiness.
  */
 
-const AI_MARKER_WORDS = [
-  "furthermore", "moreover", "therefore", "consequently", "in conclusion",
-  "it is important to note", "multifaceted", "paramount", "testament",
-  "delves into", "tapestry", "crucial", "holistic", "seamlessly",
-  "leverage", "foster", "transformative", "elucidate", "pivotal",
-  "in summary", "underscores", "exemplifies", "efficacious", "indispensable"
-];
+const { extractSentences } = require("./sentenceUtils");
 
-const CASUAL_HUMAN_MARKERS = [
-  "i", "my", "we", "me", "woke", "went", "got", "felt", "honestly",
-  "really", "basically", "stuff", "thing", "gonna", "wanna", "kinda",
-  "didn't", "don't", "can't", "wasn't", "i'm", "i've", "i'd", "lol", "yeah"
+const AI_PATTERNS = [
+  /\bcore strengths are\b/i,
+  /\bstrong foundation in\b/i,
+  /\bworked extensively with\b/i,
+  /\bbroader understanding of\b/i,
+  /\bbroad understanding of\b/i,
+  /\blooking for an opportunity where\b/i,
+  /\bapply these skills\b/i,
+  /\blearn from experienced\b/i,
+  /\bgrow into a strong\b/i,
+  /\bsolving real-world problems\b/i,
+  /\bsolve real-world problems\b/i,
+  /\bin conclusion\b/i,
+  /\bit is important to note\b/i,
+  /\bit is crucial to\b/i,
+  /\bit is essential to\b/i,
+  /\bfurthermore\b/i,
+  /\bmoreover\b/i,
+  /\btherefore\b/i,
+  /\bconsequently\b/i,
+  /\bmultifaceted\b/i,
+  /\bparamount\b/i,
+  /\btestament\b/i,
+  /\bdelves into\b/i,
+  /\btapestry\b/i,
+  /\bcrucial\b/i,
+  /\bholistic\b/i,
+  /\bseamlessly\b/i,
+  /\bleverage\b/i,
+  /\bfoster\b/i,
+  /\btransformative\b/i,
+  /\belucidate\b/i,
+  /\bpivotal\b/i,
+  /\bin summary\b/i,
+  /\bunderscores\b/i,
+  /\bexemplifies\b/i,
+  /\befficacious\b/i,
+  /\bindispensable\b/i,
+  /\bin today's\b/i,
+  /\bplays a crucial role\b/i,
+  /\bserves as a\b/i,
+  /\ba wide range of\b/i,
+  /\bcutting-edge\b/i,
+  /\bstreamline\b/i,
+  /\brobust\b/i,
+  /\bscalable\b/i,
+  /\bvaluable insights\b/i,
+  /\bdrive meaningful\b/i,
+  /\bfast-paced environment\b/i,
+  /\bpassion for\b/i,
+  /\bdemonstrated ability to\b/i,
+  /\bproven track record\b/i,
+  /\bwell-versed in\b/i,
+  /\badept at\b/i,
+  /\bhands-on experience in\b/i,
+  /\bprofoundly enhances\b/i,
+  /\bcomprehensive treatise\b/i
 ];
 
 function detectAIContent(text) {
@@ -23,81 +71,67 @@ function detectAIContent(text) {
   }
 
   const clean = text.trim();
+  const sentences = extractSentences(clean);
   const words = clean.toLowerCase().split(/\s+/).filter(Boolean);
   const totalWords = words.length;
 
-  if (totalWords === 0) {
-    return { aiScore: 0, aiRisk: "LOW" };
-  }
-
-  const sentences = clean
-    .split(/[.!?]+/)
-    .map((s) => s.trim())
-    .filter((s) => s.length > 0);
+  if (totalWords === 0) return { aiScore: 0, aiRisk: "LOW" };
 
   const totalSentences = Math.max(1, sentences.length);
 
-  // 1. Sentence Length Uniformity (Burstiness)
-  // AI tends to write sentences with very similar length (low variance / low burstiness).
+  // 1. LLM Pattern & Template Matches
+  let matchedPatterns = 0;
+  for (const pattern of AI_PATTERNS) {
+    if (pattern.test(clean)) {
+      matchedPatterns++;
+    }
+  }
+
+  // 2. Sentence Length Uniformity (Burstiness)
   const sentenceLengths = sentences.map((s) => s.split(/\s+/).filter(Boolean).length);
-  const avgSentenceLength = totalWords / totalSentences;
-
+  const avgLen = totalWords / totalSentences;
   let variance = 0;
-  sentenceLengths.forEach((len) => {
-    variance += Math.pow(len - avgSentenceLength, 2);
-  });
+  sentenceLengths.forEach((len) => (variance += Math.pow(len - avgLen, 2)));
   const stdDev = Math.sqrt(variance / totalSentences);
-  const burstiness = avgSentenceLength > 0 ? stdDev / avgSentenceLength : 0;
+  const burstiness = avgLen > 0 ? stdDev / avgLen : 0;
 
-  // 2. AI Formal Marker Density
-  let aiMarkerCount = 0;
-  const lowerText = clean.toLowerCase();
-  for (const marker of AI_MARKER_WORDS) {
-    if (lowerText.includes(marker)) {
-      aiMarkerCount++;
-    }
+  // 3. Connective & Relative Clause Density
+  const relativeClauses = (clean.match(/,\s*(which|where|allowing|enabling|ensuring|helping|while|built|including)\b/gi) || []).length;
+  const listCoordinators = (clean.match(/,\s*and\s+/gi) || []).length;
+
+  // 4. Uniform sentence length bracket (16-40 words)
+  const uniformLengthCount = sentenceLengths.filter((len) => len >= 16 && len <= 40).length;
+  const uniformityRatio = uniformLengthCount / totalSentences;
+
+  // 5. Calculate Composite AI Score
+  let score = 0;
+
+  // Pattern matches (up to 55 pts)
+  score += Math.min(55, matchedPatterns * 12);
+
+  // Subordinate / connective clauses (up to 20 pts)
+  if (relativeClauses >= 1) score += 10;
+  if (relativeClauses >= 3) score += 10;
+  if (listCoordinators >= 2) score += 10;
+
+  // Syntactic uniformity (up to 20 pts)
+  if (totalSentences >= 2 && uniformityRatio >= 0.6) {
+    score += 15;
+  }
+  if (totalSentences >= 2 && burstiness < 0.35) {
+    score += 10;
   }
 
-  // 3. Human Casual Marker Density
-  let humanMarkerCount = 0;
-  const wordSet = new Set(words);
-  for (const h of CASUAL_HUMAN_MARKERS) {
-    if (wordSet.has(h)) {
-      humanMarkerCount++;
-    }
+  // Sentence length structure (15-38 words average)
+  if (avgLen >= 16 && avgLen <= 38) {
+    score += 10;
   }
 
-  // Score computation
-  let rawScore = 0;
-
-  // AI Marker contribution (up to 45 pts)
-  rawScore += Math.min(45, aiMarkerCount * 15);
-
-  // Low burstiness (monotonous sentence length) in longer texts (up to 25 pts)
-  if (totalSentences >= 3 && burstiness < 0.25) {
-    rawScore += 25;
-  } else if (totalSentences >= 2 && burstiness < 0.35) {
-    rawScore += 15;
-  }
-
-  // High formal avg length without casual markers (up to 20 pts)
-  if (avgSentenceLength >= 22 && humanMarkerCount === 0) {
-    rawScore += 20;
-  } else if (avgSentenceLength >= 18 && humanMarkerCount === 0) {
-    rawScore += 10;
-  }
-
-  // Heavy penalty for human conversational markers (-30 pts)
-  rawScore -= Math.min(40, humanMarkerCount * 12);
-
-  const aiScore = Math.max(0, Math.min(100, Math.round(rawScore)));
+  const aiScore = Math.max(0, Math.min(100, Math.round(score)));
 
   let aiRisk = "LOW";
-  if (aiScore >= 65) {
-    aiRisk = "HIGH";
-  } else if (aiScore >= 35) {
-    aiRisk = "MEDIUM";
-  }
+  if (aiScore >= 60) aiRisk = "HIGH";
+  else if (aiScore >= 30) aiRisk = "MEDIUM";
 
   return {
     aiScore,
