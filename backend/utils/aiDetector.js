@@ -1,7 +1,7 @@
 ﻿/**
  * ZeroTrace AI Content Detector Utility
  * Evaluates LLM template signatures, transition markers, relative clause density,
- * sentence length predictability, and burstiness.
+ * sentence length predictability, and burstiness across general essays and formal correspondence.
  */
 
 const { extractSentences } = require("./sentenceUtils");
@@ -62,7 +62,28 @@ const AI_PATTERNS = [
   /\badept at\b/i,
   /\bhands-on experience in\b/i,
   /\bprofoundly enhances\b/i,
-  /\bcomprehensive treatise\b/i
+  /\bcomprehensive treatise\b/i,
+
+  // ChatGPT institutional correspondence patterns
+  /\bkindly request your permission\b/i,
+  /\bgrant us permission\b/i,
+  /\bwe assure you that we will\b/i,
+  /\bwe would be grateful if\b/i,
+  /\bmaintain discipline\b/i,
+  /\brules and regulations\b/i,
+  /\bfor this purpose\b/i,
+  /\bthank you for your consideration\b/i,
+  /\byours sincerely\b/i,
+  /\bwithout any technical difficulties\b/i,
+  /\bnecessary infrastructure\b/i,
+  /\bsuitable and professional environment\b/i,
+  /\bimportant for our career\b/i,
+  /\bwe kindly request\b/i,
+  /\bhope this email finds you well\b/i,
+  /\bi am writing to request\b/i,
+  /\bi am writing this email to\b/i,
+  /\bprompt attention to this matter\b/i,
+  /\blook forward to your positive response\b/i
 ];
 
 function detectAIContent(text) {
@@ -71,12 +92,14 @@ function detectAIContent(text) {
   }
 
   const clean = text.trim();
-  const sentences = extractSentences(clean);
+  const rawSentences = extractSentences(clean);
   const words = clean.toLowerCase().split(/\s+/).filter(Boolean);
   const totalWords = words.length;
 
   if (totalWords === 0) return { aiScore: 0, aiRisk: "LOW" };
 
+  // Filter out short salutation/sign-off fragments (<= 4 words like "Yours sincerely", "VIT Bhopal University")
+  const sentences = rawSentences.filter((s) => s.split(/\s+/).filter(Boolean).length > 4);
   const totalSentences = Math.max(1, sentences.length);
 
   // 1. LLM Pattern & Template Matches
@@ -87,16 +110,17 @@ function detectAIContent(text) {
     }
   }
 
-  // 2. Sentence Length Uniformity (Burstiness)
+  // 2. Sentence Length Uniformity (Burstiness) on body sentences
   const sentenceLengths = sentences.map((s) => s.split(/\s+/).filter(Boolean).length);
-  const avgLen = totalWords / totalSentences;
+  const bodyTotalWords = sentenceLengths.reduce((a, b) => a + b, 0);
+  const avgLen = bodyTotalWords / totalSentences;
   let variance = 0;
   sentenceLengths.forEach((len) => (variance += Math.pow(len - avgLen, 2)));
   const stdDev = Math.sqrt(variance / totalSentences);
   const burstiness = avgLen > 0 ? stdDev / avgLen : 0;
 
   // 3. Connective & Relative Clause Density
-  const relativeClauses = (clean.match(/,\s*(which|where|allowing|enabling|ensuring|helping|while|built|including)\b/gi) || []).length;
+  const relativeClauses = (clean.match(/,\s*(which|where|allowing|enabling|ensuring|helping|while|built|including|along with|as these)\b/gi) || []).length;
   const listCoordinators = (clean.match(/,\s*and\s+/gi) || []).length;
 
   // 4. Uniform sentence length bracket (16-40 words)
@@ -107,7 +131,7 @@ function detectAIContent(text) {
   let score = 0;
 
   // Pattern matches (up to 55 pts)
-  score += Math.min(55, matchedPatterns * 12);
+  score += Math.min(55, matchedPatterns * 10);
 
   // Subordinate / connective clauses (up to 20 pts)
   if (relativeClauses >= 1) score += 10;
@@ -115,15 +139,15 @@ function detectAIContent(text) {
   if (listCoordinators >= 2) score += 10;
 
   // Syntactic uniformity (up to 20 pts)
-  if (totalSentences >= 2 && uniformityRatio >= 0.6) {
+  if (totalSentences >= 2 && uniformityRatio >= 0.5) {
     score += 15;
   }
-  if (totalSentences >= 2 && burstiness < 0.35) {
+  if (totalSentences >= 2 && burstiness < 0.55) {
     score += 10;
   }
 
-  // Sentence length structure (15-38 words average)
-  if (avgLen >= 16 && avgLen <= 38) {
+  // Sentence length structure (15-40 words average)
+  if (avgLen >= 15 && avgLen <= 40) {
     score += 10;
   }
 

@@ -1,13 +1,21 @@
 const Report = require("../models/Report");
 const PDFDocument = require("pdfkit");
 const generatePDF = require("../utils/pdfGenerator");
+const { generatePDFFromScan } = require("../utils/scanPdfGenerator");
 
 // ======================================
-// Generate Basic PDF (Existing)
+// Generate PDF from Scan Data
 // ======================================
 
 const generateReport = async (req, res) => {
   try {
+    const scanData = req.body;
+
+    // If comprehensive scan results are passed, generate full PDF report
+    if (scanData && (scanData.analysis || scanData.stats || scanData.sources || scanData.aiScore !== undefined)) {
+      return generatePDFFromScan(scanData, res);
+    }
+
     const { score, risk } = req.body;
 
     const doc = new PDFDocument({

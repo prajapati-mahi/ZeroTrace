@@ -83,7 +83,7 @@ Coverage         : ${result.stats?.coveragePercent || 0}%
     toast.success("Report copied to clipboard.");
   };
 
-  const downloadReport = () => {
+  const downloadJSON = () => {
     if (!result) return;
 
     const blob = new Blob([JSON.stringify(result, null, 2)], {
@@ -96,6 +96,32 @@ Coverage         : ${result.stats?.coveragePercent || 0}%
     a.download = `ZeroTrace_Report_${Date.now()}.json`;
     a.click();
     toast.success("Report downloaded as JSON.");
+  };
+
+  const downloadPDFReport = async () => {
+    if (!result) return;
+
+    try {
+      toast.info("Generating PDF report...");
+      const response = await api.post(
+        "/report/generate",
+        result,
+        { responseType: "blob" }
+      );
+
+      const url = window.URL.createObjectURL(new Blob([response.data], { type: "application/pdf" }));
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `ZeroTrace_Report_${Date.now()}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+      toast.success("PDF report downloaded.");
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to generate PDF report.");
+    }
   };
 
   const plagColor =
@@ -171,7 +197,14 @@ Coverage         : ${result.stats?.coveragePercent || 0}%
                 </button>
 
                 <button
-                  onClick={downloadReport}
+                  onClick={downloadPDFReport}
+                  className="bg-cyan-500/20 border border-cyan-400 text-cyan-300 hover:bg-cyan-500/30 px-5 py-3.5 rounded-2xl flex items-center gap-2.5 transition text-sm font-semibold"
+                >
+                  <FaDownload /> Download PDF Report
+                </button>
+
+                <button
+                  onClick={downloadJSON}
                   className="bg-[#10101A] border border-[#2D2D44] hover:border-cyan-400 px-5 py-3.5 rounded-2xl flex items-center gap-2.5 transition text-sm"
                 >
                   <FaDownload /> Export JSON
