@@ -4,6 +4,9 @@
 
 ![ZeroTrace Checker Analysis](docs/screenshots/06_plagiarism_50pct_detection.png)
 
+[![Live Demo](https://img.shields.io/badge/Live_Demo-Visit_ZeroTrace-00DF8F?style=for-the-badge&logo=vercel&logoColor=white)](https://zero-trace-frontend-three.vercel.app)
+[![API Status](https://img.shields.io/badge/Backend_API-Render_Live-46E3B7?style=for-the-badge&logo=render&logoColor=white)](https://zerotrace-backend-ger4.onrender.com)
+
 [![License: ISC](https://img.shields.io/badge/License-ISC-blue.svg)](https://opensource.org/licenses/ISC)
 [![React](https://img.shields.io/badge/Frontend-React_18_%2B_Vite-61DAFB?logo=react&logoColor=black)](https://reactjs.org/)
 [![Node.js](https://img.shields.io/badge/Backend-Node.js_%2B_Express-339933?logo=node.js&logoColor=white)](https://nodejs.org/)
@@ -11,6 +14,9 @@
 [![Tailwind CSS](https://img.shields.io/badge/Styling-Tailwind_CSS-38B2AC?logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
 
 **ZeroTrace** is a production-grade, multi-signal plagiarism detection and AI content authenticity engine. It combines lexical, structural, and semantic NLP techniques to detect verbatim copying, paraphrasing, code plagiarism, and AI-generated text with high accuracy and zero arbitrary cutoffs.
+
+🚀 **Live Web App:** [https://zero-trace-frontend-three.vercel.app](https://zero-trace-frontend-three.vercel.app)  
+⚡ **Production Backend API:** [https://zerotrace-backend-ger4.onrender.com](https://zerotrace-backend-ger4.onrender.com)
 
 </div>
 
@@ -202,22 +208,12 @@ node backend/tests/plagiarism/benchmark.js
 
 ---
 
-## 🌐 Production Deployment Guide
+## 🌐 Live Production Deployments
 
-ZeroTrace is pre-configured for one-click deployment:
-
-### Backend Deployment (Render)
-1. Link your GitHub repo to [Render](https://render.com).
-2. Set **Root Directory** to `backend`.
-3. Set **Build Command** to `npm install` and **Start Command** to `npm run start`.
-4. Add environment variables: `MONGO_URI`, `JWT_SECRET`, `SERPER_API_KEY`, and `PORT=5000`.
-
-### Frontend Deployment (Vercel)
-1. Import your GitHub repo on [Vercel](https://vercel.com).
-2. Set **Root Directory** to `frontend`.
-3. Add environment variable:
-   - `VITE_API_URL`: `https://your-render-backend.onrender.com/api`
-4. Deploy — routing is handled automatically via `frontend/vercel.json`.
+| Component | Platform | Live URL |
+|---|---|---|
+| **Frontend Web App** | Vercel | [https://zero-trace-frontend-three.vercel.app](https://zero-trace-frontend-three.vercel.app) |
+| **Backend API** | Render | [https://zerotrace-backend-ger4.onrender.com](https://zerotrace-backend-ger4.onrender.com) |
 
 ---
 
