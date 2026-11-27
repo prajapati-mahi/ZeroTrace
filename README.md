@@ -2,7 +2,7 @@
 
 <div align="center">
 
-![ZeroTrace Plagiarism & AI Checker](docs/screenshots/checker_analysis_view.png)
+![ZeroTrace Checker Analysis](docs/screenshots/06_plagiarism_50pct_detection.png)
 
 [![License: ISC](https://img.shields.io/badge/License-ISC-blue.svg)](https://opensource.org/licenses/ISC)
 [![React](https://img.shields.io/badge/Frontend-React_18_%2B_Vite-61DAFB?logo=react&logoColor=black)](https://reactjs.org/)
@@ -10,40 +10,82 @@
 [![MongoDB](https://img.shields.io/badge/Database-MongoDB_Atlas-47A248?logo=mongodb&logoColor=white)](https://www.mongodb.com/)
 [![Tailwind CSS](https://img.shields.io/badge/Styling-Tailwind_CSS-38B2AC?logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
 
-**ZeroTrace** is a production-grade, multi-signal plagiarism detection and content authenticity platform. It combines lexical, structural, and semantic NLP techniques to detect verbatim copying, paraphrasing, code plagiarism, and AI-generated text with high accuracy and zero arbitrary cutoffs.
+**ZeroTrace** is a production-grade, multi-signal plagiarism detection and AI content authenticity engine. It combines lexical, structural, and semantic NLP techniques to detect verbatim copying, paraphrasing, code plagiarism, and AI-generated text with high accuracy and zero arbitrary cutoffs.
 
 </div>
 
 ---
 
-## 📸 Working Project Screenshots
+## 📸 Complete Application Walkthrough & Screenshots
 
-### 1. Multi-Signal Content & Authenticity Checker
-Real-time analysis combining web-indexed plagiarism detection and AI probability estimation with passage evidence:
-
-![ZeroTrace Checker Analysis](docs/screenshots/checker_analysis_view.png)
+Below is a step-by-step visual tour of ZeroTrace, from user onboarding and the personal dashboard to individual plagiarism detection, AI likelihood scoring, passage alignment, and PDF report generation.
 
 ---
 
-### 2. Live Risk & Score Breakdown
-Dual-score gauges distinguishing independent AI likelihood from direct web & document plagiarism:
+### 1. User Authentication & Onboarding
 
-![Score Breakdown & Assessment](docs/screenshots/score_breakdown_cards.png)
+#### Secure Login Portal
+Registered users access their personalized dashboard, previous scan history, and saved reports via JWT authentication:
+![ZeroTrace Login Portal](docs/screenshots/01_login_portal.png)
+
+#### New Account Registration
+Fast signup with client and server-side validation, password hashing via bcrypt, and automatic session initialization:
+![ZeroTrace Sign Up](docs/screenshots/02_signup_registration.png)
 
 ---
 
-## ✨ Key Features
+### 2. User Dashboard & Recent Scans
+
+#### Centralized Monitoring Dashboard
+View all previously conducted text and PDF scans, track submission timestamps, similarity scores, and severity risk levels:
+![Dashboard & Recent Reports](docs/screenshots/03_dashboard_recent_reports.png)
+
+---
+
+### 3. Multi-Signal Content & Plagiarism Checker
+
+#### Input & Analysis Interface
+Paste code snippets, technical interview questions, or essays. Features real-time word and character counters, quick sample loaders, and one-click analysis:
+![Checker Input Interface](docs/screenshots/05_checker_input_interface.png)
+
+#### Live Detection Results & Multi-Signal Gauge
+Dual circular score gauges distinguish independent AI likelihood from direct web & document plagiarism:
+![Plagiarism & AI Scores](docs/screenshots/06_plagiarism_50pct_detection.png)
+
+---
+
+### 4. Overlapping Passages & Source Evidence
+
+#### Sentence-by-Sentence Passage Alignment
+Identifies each overlapping sentence, assigns similarity percentages and match categories (*Paraphrased / Semantic*, *Near-Exact*, or *Exact*), and cites the origin:
+![Matched Passages & Evidence](docs/screenshots/07_matched_passages_evidence.png)
+
+#### Detected Web Sources & Reference Links
+Real-time crawler results displaying live source URLs, domains, confidence ratings, and similarity scores:
+![Detected Sources](docs/screenshots/08_detected_sources_links.png)
+
+---
+
+### 5. Independent AI-Generated Content Detection
+
+#### LLM Pattern, Burstiness & Uniformity Analysis
+Evaluates linguistic predictability, sentence length variance, and transition markers independently from plagiarism scores:
+![AI Content Detection](docs/screenshots/04_ai_content_detection_analysis.png)
+
+---
+
+## ✨ Key Technical Capabilities
 
 - **Multi-Signal Plagiarism Detection Pipeline**:
   - **Layer 1: Exact Normalized Matching** — Unicode NFC normalization, whitespace, quotes, punctuation, and case folding.
   - **Layer 2: Token Lexical Similarity** — Jaccard index, Sørensen-Dice coefficient, and Longest Common Subsequence (LCS).
   - **Layer 3: Word $N$-gram Shingling** — Multi-scale shingles ($n = 3, 4, 5$) for detecting localized passage copying.
-  - **Layer 4: Document Fingerprinting** — Robust Winnowing algorithm for resilient near-duplicate detection.
+  - **Layer 4: Document Fingerprinting** — Winnowing algorithm for resilient near-duplicate detection.
   - **Layer 5: TF-IDF Cosine Similarity** — Salient keyword weighting to prioritize distinctive domain terms.
   - **Layer 6: Semantic Vector Embeddings** — Dense representation for paraphrased concept alignment.
   - **Layer 7: Structural Code AST Comparison** — Normalized token stream analysis for Python, JavaScript, C++, and Java.
-- **Independent AI-Generated Content Detection**:
-  - Analyzes LLM template signatures, transition marker density, relative clause distribution, and sentence burstiness (variance in sentence lengths).
+- **Independent AI Content Detection**:
+  - Analyzes LLM template signatures, transition marker density, relative clause distribution, and sentence burstiness.
   - Evaluated separately from plagiarism so human-written and AI-generated texts are never conflated.
 - **Adaptive Multi-Strategy Web Search**:
   - Quoted exact phrases, distinctive text windows, technical keyword queries, and relaxed searches via Serper API.
@@ -160,10 +202,22 @@ node backend/tests/plagiarism/benchmark.js
 
 ---
 
-## 🌐 Deployment
+## 🌐 Production Deployment Guide
 
-- **Backend**: Ready to deploy on [Render](https://render.com) or [Railway] using `backend` as root directory.
-- **Frontend**: Configured for instant deployment on [Vercel](https://vercel.com) with root directory set to `frontend` (includes `vercel.json` for SPA route rewrites).
+ZeroTrace is pre-configured for one-click deployment:
+
+### Backend Deployment (Render)
+1. Link your GitHub repo to [Render](https://render.com).
+2. Set **Root Directory** to `backend`.
+3. Set **Build Command** to `npm install` and **Start Command** to `npm run start`.
+4. Add environment variables: `MONGO_URI`, `JWT_SECRET`, `SERPER_API_KEY`, and `PORT=5000`.
+
+### Frontend Deployment (Vercel)
+1. Import your GitHub repo on [Vercel](https://vercel.com).
+2. Set **Root Directory** to `frontend`.
+3. Add environment variable:
+   - `VITE_API_URL`: `https://your-render-backend.onrender.com/api`
+4. Deploy — routing is handled automatically via `frontend/vercel.json`.
 
 ---
 
